@@ -2,7 +2,7 @@ SHELL   := /bin/bash
 
 NAME    := mizql
 
-SRCS    := $(shell find ./src -type f \( -name '*.css' -o -name '*.py' -o -name '*.html' -o -name '*.js' \) -print)
+SRCS    := $(shell find ./mizql -type f \( -name '*.css' -o -name '*.py' -o -name '*.html' -o -name '*.js' \) -print)
 DOCKERFILE := Dockerfile
 DB_USER := develop
 DB_PASSWORD := password
@@ -54,7 +54,7 @@ rundb:
 			-e MYSQL_USER=$(DB_USER) \
 			-e MYSQL_PASSWORD=$(DB_PASSWORD) \
 			-e MYSQL_DATABASE=$(DB_NAME) \
-			-p $(DB_PORT):$(DB_PORT) \
+			-p $(DB_PORT):3306 \
 			$(DB_IMAGE):$(DB_IMAGE_VERSION) > /dev/null; \
 	fi
 
