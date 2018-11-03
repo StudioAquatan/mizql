@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+  webapp:
+    container_name: mizql-app-qa
+    image: studioaquatan/mizql:latest
+    env_file:
+      - env_files/app.env
+    expose:
+      - 8000
+    depends_on:
+      - db
+    networks:
+      default:
+        aliases:
+          - mizql-app
+  db:
+    image: studioaquatan/mysql-utf8mb4:latest
+    container_name: mizql-db-qa
+    env_file:
+      - env_files/db.env
+    volumes:
+      - ./env_files/data:/var/lib/mysql:rw
+    networks:
+      default:
+        aliases:
+          - mizql-db
+  nginx:
+    image: nginx:latest
+    container_name: mizql-nginx-qa
+    env_file:
+      - env_files/static.env
+    volumes:
+      - ./env_files/conf_qa:/etc/nginx/conf.d
+      - ./src/static:/usr/share/www/html/static
+      - ./src/media:/usr/share/www/html/media
+    depends_on:
+      - webapp
+    ports:
+      - 8800:80
