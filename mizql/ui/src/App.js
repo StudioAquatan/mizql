@@ -1,6 +1,6 @@
 import React from 'react';
-import './App.css';
 import {BrowserRouter, Route} from 'react-router-dom';
+import Home from './components/Home';
 
 const App = () => (
   <BrowserRouter>
@@ -9,13 +9,6 @@ const App = () => (
       <Route path='/login' component={Login}/>
     </div>
   </BrowserRouter>
-);
-
-const Home = () => (
-  <div>
-    <h2>Home</h2>
-    <p>Not Implemented</p>
-  </div>
 );
 
 const Login = () => (
