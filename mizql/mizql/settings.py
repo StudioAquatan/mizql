@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'djoser',
     'django_filters',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -69,6 +70,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'mizql.urls'
+AUTH_USER_MODEL = 'accounts.User'
+
 
 TEMPLATES = [
     {
@@ -150,6 +153,11 @@ DJOSER = {
     'SEND_CONFIRMATION_EMAIL': False,
 }
 
+SWAGGER_SETTINGS = {
+    'LOGIN_URL': 'accounts:login',
+    'LOGOUT_URL': 'accounts:logout',
+}
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
@@ -158,7 +166,6 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
-    'DATETIME_FORMAT': "%Y/%m/%d"
 }
 
 JWT_AUTH = {
