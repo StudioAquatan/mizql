@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'djoser',
     'django_filters',
     'accounts',
+    'evacuation',
 ]
 
 MIDDLEWARE = [
@@ -171,3 +172,5 @@ REST_FRAMEWORK = {
 JWT_AUTH = {
     'JWT_VERIFY_EXPIRATION': False
 }
+
+YOLP_APP_ID = os.getenv('YOLP_APP_ID')
