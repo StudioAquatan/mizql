@@ -18,13 +18,15 @@ export const MapComponent = compose(
     defaultCenter={props.myPosition}
   >
     <Marker position={props.myPosition}/>
-    {props.shelters.map((shelter, key) => (
-     <Marker
-       key={key}
-       title={shelter.name}
-       position={shelter.position}
-       onClick={() => console.log(shelter.name)}
-     />
-    ))}
+    {props.shelters ?
+      props.shelters.map((shelter, key) => (
+        <Marker
+          key={key}
+          title={shelter.name}
+          position={shelter.position}
+          onClick={() => console.log(shelter.name)}
+        />
+      )) : null
+    }
   </GoogleMap>
 ));
