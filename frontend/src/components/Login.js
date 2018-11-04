@@ -28,7 +28,7 @@ export default class Login extends Component {
   render() {
     return (
       <React.Fragment>
-        <AppBar position="static">
+        <AppBar>
           <Toolbar>
             <Typography variant='h6' color='inherit' style={{flex: 1}}>
               Mizukuru Map
