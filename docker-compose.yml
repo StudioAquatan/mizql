@@ -26,13 +26,14 @@ services:
         aliases:
           - mizql-db
   nginx:
-    image: studioaquatan/mizql-front:latest
+    image: nginx:latest
     container_name: mizql-nginx-qa
     env_file:
       - env_files/static.env
     volumes:
       - ./env_files/conf_qa:/etc/nginx/conf.d
       - ./mizql/static:/usr/share/www/html/static
+      - ./frontend/build:/usr/share/www/html/front
     depends_on:
       - webapp
     ports:
