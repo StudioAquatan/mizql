@@ -1,6 +1,7 @@
 import React from 'react';
 import {compose, withProps} from 'recompose';
 import {GoogleMap, Marker, withGoogleMap, withScriptjs} from 'react-google-maps';
+import {MarkerWithLabel} from 'react-google-maps/lib/components/addons/MarkerWithLabel';
 
 export const MapComponent = compose(
   withProps({
@@ -17,5 +18,13 @@ export const MapComponent = compose(
     defaultCenter={props.myPosition}
   >
     <Marker position={props.myPosition}/>
+    {props.shelters.map((shelter, key) => (
+     <Marker
+       key={key}
+       title={shelter.name}
+       position={shelter.position}
+       onClick={() => console.log(shelter.name)}
+     />
+    ))}
   </GoogleMap>
 ));
