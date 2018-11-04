@@ -92,4 +92,7 @@ prod-start:
 prod-manage:
 	docker-compose -f docker-compose.prod.yml exec webapp pipenv run python manage.py $(ARGS)
 
+prod-stop:
+	docker-compose -f docker-compose.prod.yml stop
+
 .PHONY: deps image rundb stopdb cleandb qa-start qa-stop qa-manage qa-clean ;
