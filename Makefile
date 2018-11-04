@@ -31,7 +31,7 @@ deps:
 	fi
 
 frontimage: $(FRONT_SRCS)
-	docker build . -t studioaquatan/$(NAME)-front:latest -f Dockerfile.front
+	docker build . -t studioaquatan/$(NAME)-front:latest -f frontend/Dockerfile
 
 image: $(SRCS) $(DOCKERFILE)
 	$(eval VERSION := $(shell git describe --tags || echo "v0.0.0"))
