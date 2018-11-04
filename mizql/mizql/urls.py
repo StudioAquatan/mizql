@@ -26,7 +26,7 @@ router.register(r'users', UserViewSets, base_name='users')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('_/', include('accounts.urls')),
-    path('api/', include(router.urls)),
-    path('api/auth/', include('djoser.urls.jwt')),
+    path('', include(router.urls)),
+    path('auth/', include('djoser.urls.jwt')),
     path('swagger/', get_swagger_view(title='mizql API Doc')),
 ]
