@@ -12,6 +12,8 @@ django-filter = "*"
 django-rest-swagger = "*"
 python-dotenv = "*"
 mysqlclient = "*"
+gunicorn = "*"
+requests = "*"
 
 [dev-packages]
 

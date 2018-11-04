@@ -32,7 +32,7 @@ deps:
 image: $(SRCS) $(DOCKERFILE)
 	$(eval VERSION := $(shell git describe --tags || echo "v0.0.0"))
 	$(eval REVISION:= $(shell git rev-parse --short HEAD || echo "None"))
-	docker build . -t studioaquatan/plannap-api:latest
+	docker build . -t studioaquatan/$(NAME):latest
 
 pull:
 	docker pull studioaquatan/plannap-api:latest

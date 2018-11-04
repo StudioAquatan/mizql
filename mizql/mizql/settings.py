@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'djoser',
     'django_filters',
     'accounts',
+    'evacuation',
 ]
 
 MIDDLEWARE = [
@@ -145,7 +146,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/api/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 DJOSER = {
@@ -171,3 +172,8 @@ REST_FRAMEWORK = {
 JWT_AUTH = {
     'JWT_VERIFY_EXPIRATION': False
 }
+
+if not DEBUG:
+    FORCE_SCRIPT_NAME = '/api'
+
+YOLP_APP_ID = os.getenv('YOLP_APP_ID')

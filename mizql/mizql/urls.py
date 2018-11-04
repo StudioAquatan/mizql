@@ -19,14 +19,16 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_swagger.views import get_swagger_view
 
 from accounts.views import UserViewSets
+from evacuation.views import ShelterViewSets
 
 router = DefaultRouter()
-router.register(r'users', UserViewSets, base_name='users')
+router.register(r'users', UserViewSets, basename='users')
+router.register(r'shelters', ShelterViewSets, basename='shelters')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('_/', include('accounts.urls')),
-    path('api/', include(router.urls)),
-    path('api/auth/', include('djoser.urls.jwt')),
+    path('', include(router.urls)),
+    path('auth/', include('djoser.urls.jwt')),
     path('swagger/', get_swagger_view(title='mizql API Doc')),
 ]
