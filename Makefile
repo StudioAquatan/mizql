@@ -3,6 +3,7 @@ SHELL   := /bin/bash
 NAME    := mizql
 
 SRCS    := $(shell find ./mizql -type f \( -name '*.css' -o -name '*.py' -o -name '*.html' -o -name '*.js' \) -print)
+FRONT_SRCS := $(shell find ./frontend -type f \( -name '*.css' -o -name '*.html' -o -name '*.js' \) -print)
 DOCKERFILE := Dockerfile
 DB_USER := develop
 DB_PASSWORD := password
@@ -29,13 +30,17 @@ deps:
 		echo "'$(DB_IMAGE):$(DB_IMAGE_VERSION)' has already been pulled."; \
 	fi
 
+frontimage: $(FRONT_SRCS)
+	docker build . -t studioaquatan/$(NAME)-front:latest -f Dockerfile.front
+
 image: $(SRCS) $(DOCKERFILE)
 	$(eval VERSION := $(shell git describe --tags || echo "v0.0.0"))
 	$(eval REVISION:= $(shell git rev-parse --short HEAD || echo "None"))
 	docker build . -t studioaquatan/$(NAME):latest
 
 pull:
-	docker pull studioaquatan/plannap-api:latest
+	docker pull studioaquatan/$(NAME):latest
+	docker pull studioaquatan/$(NAME)-front:latest
 
 rundb:
 	$(eval RUNNING := $(shell docker ps -q -f name=$(DEV_DB_CONTAINER)))
