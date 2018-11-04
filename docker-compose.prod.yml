@@ -31,7 +31,7 @@ services:
     env_file:
       - env_files/static.env
     volumes:
-      - ./env_files/conf_qa:/etc/nginx/conf.d
+      - ./env_files/conf_prod:/etc/nginx/conf.d
       - ./mizql/static:/usr/share/www/html/static
     depends_on:
       - webapp
