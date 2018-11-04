@@ -19,9 +19,11 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_swagger.views import get_swagger_view
 
 from accounts.views import UserViewSets
+from evacuation.views import ShelterViewSets
 
 router = DefaultRouter()
-router.register(r'users', UserViewSets, base_name='users')
+router.register(r'users', UserViewSets, basename='users')
+router.register(r'shelters', ShelterViewSets, basename='shelters')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
