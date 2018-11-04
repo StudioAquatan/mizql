@@ -1,28 +1,20 @@
 import React from 'react';
-import './App.css';
 import {BrowserRouter, Route} from 'react-router-dom';
+import Home from './components/Home';
+import Login from './components/Login';
+import {MuiThemeProvider} from '@material-ui/core/styles';
+import {theme} from './contains/theme';
+import {Store} from './store';
 
 const App = () => (
   <BrowserRouter>
-    <div>
-      <Route exact path='/' component={Home}/>
-      <Route path='/login' component={Login}/>
-    </div>
+    <Store.Provider>
+      <MuiThemeProvider theme={theme}>
+        <Route exact path='/' component={Home}/>
+        <Route path='/login' component={Login}/>
+      </MuiThemeProvider>
+    </Store.Provider>
   </BrowserRouter>
-);
-
-const Home = () => (
-  <div>
-    <h2>Home</h2>
-    <p>Not Implemented</p>
-  </div>
-);
-
-const Login = () => (
-  <div>
-    <h2>Login</h2>
-    <p>Not Implemented</p>
-  </div>
 );
 
 export default App;
