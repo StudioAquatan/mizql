@@ -25,6 +25,11 @@ yarn build
 yarn start
 ```
 
+Build importing `.env.development` as production mode
+```bash
+yarn build-dev
+```
+
 #### Production mode
 install http-server
 ```bash
