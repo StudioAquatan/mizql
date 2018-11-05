@@ -30,8 +30,8 @@ deps:
 		echo "'$(DB_IMAGE):$(DB_IMAGE_VERSION)' has already been pulled."; \
 	fi
 
-frontimage: $(FRONT_SRCS)
-	docker build . -t studioaquatan/$(NAME)-front:latest -f frontend/Dockerfile
+frontimage: $(FRONT_SRCS) frontend/$(DOCKERFILE)
+	cd frontend && docker build . -t studioaquatan/$(NAME)-front:latest
 
 image: $(SRCS) $(DOCKERFILE)
 	$(eval VERSION := $(shell git describe --tags || echo "v0.0.0"))
@@ -95,4 +95,4 @@ prod-manage:
 prod-stop:
 	docker-compose -f docker-compose.prod.yml stop
 
-.PHONY: deps image rundb stopdb cleandb qa-start qa-stop qa-manage qa-clean ;
+.PHONY: deps image rundb stopdb cleandb qa-start qa-stop qa-manage qa-clean $(FRONT_SRCS) ;
