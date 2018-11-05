@@ -1,7 +1,7 @@
 import React from 'react';
 import {compose, withProps} from 'recompose';
 import {GoogleMap, Marker, withGoogleMap, withScriptjs} from 'react-google-maps';
-import {MarkerWithLabel} from 'react-google-maps/lib/components/addons/MarkerWithLabel';
+import UserPoint from '../UserMapPoint.svg';
 
 export const MapComponent = compose(
   withProps({
@@ -17,7 +17,13 @@ export const MapComponent = compose(
     defaultZoom={15}
     defaultCenter={props.myPosition}
   >
-    <Marker position={props.myPosition}/>
+    <Marker
+      icon={{
+        url: UserPoint,
+        scaledSize: new window.google.maps.Size(60, 40),
+      }}
+      position={props.myPosition}
+    />
     {props.shelters ?
       props.shelters.map((shelter, key) => (
         <Marker
