@@ -20,6 +20,7 @@ from rest_framework_swagger.views import get_swagger_view
 
 from accounts.views import UserViewSets
 from evacuation.views import ShelterViewSets
+from disaster.views import LocationView, DemoLocationView
 
 router = DefaultRouter()
 router.register(r'users', UserViewSets, basename='users')
@@ -29,6 +30,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('_/', include('accounts.urls')),
     path('', include(router.urls)),
+    path('area/', LocationView.as_view()),
+    path('demo-area/', DemoLocationView.as_view()),
     path('auth/', include('djoser.urls.jwt')),
     path('swagger/', get_swagger_view(title='mizql API Doc')),
 ]
