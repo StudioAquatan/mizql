@@ -175,8 +175,9 @@ JWT_AUTH = {
     'JWT_VERIFY_EXPIRATION': False
 }
 
-if not DEBUG:
-    FORCE_SCRIPT_NAME = '/api'
+if DEBUG:
     CORS_ORIGIN_ALLOW_ALL = True
+else:
+    FORCE_SCRIPT_NAME = '/api'
 
 YOLP_APP_ID = os.getenv('YOLP_APP_ID')
