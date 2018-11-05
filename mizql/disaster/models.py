@@ -21,17 +21,9 @@ class Alarm(models.Model):
     name = models.CharField('名称', max_length=100)
     location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='alarms', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    deleted_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ['-created_at']
-
-    @property
-    def is_deleted(self):
-        if self.deleted_at is None:
-            return False
-        return True
 
 
 class DemoLocation(models.Model):
@@ -54,14 +46,6 @@ class DemoAlarm(models.Model):
     name = models.CharField('名称', max_length=100)
     location = models.ForeignKey(DemoLocation, on_delete=models.CASCADE, related_name='alarms', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    deleted_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ['-created_at']
-
-    @property
-    def is_deleted(self):
-        if self.deleted_at is None:
-            return False
-        return True

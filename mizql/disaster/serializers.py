@@ -9,7 +9,7 @@ class AlarmSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Alarm
-        fields = ('pk', 'code', 'name', 'created_at', 'updated_at', 'deleted_at')
+        fields = ('pk', 'code', 'name', 'created_at')
 
 
 class LocationSerializer(serializers.ModelSerializer):
@@ -27,7 +27,7 @@ class LocationSerializer(serializers.ModelSerializer):
 class DemoAlarmSerializer(serializers.ModelSerializer):
     class Meta:
         model = DemoAlarm
-        fields = ('pk', 'code', 'name', 'created_at', 'updated_at', 'deleted_at')
+        fields = ('pk', 'code', 'name', 'created_at')
 
 
 class DemoLocationSerializer(serializers.ModelSerializer):

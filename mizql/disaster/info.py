@@ -75,17 +75,14 @@ class DisasterReport(object):
         return alarms
 
     def update_alarm(self, loc_id: int, code: int, name: str, status: str):
-        now = datetime.now()
         if status == '解除':
+            # 解除だったら削除する
             try:
                 exists_alarm = self.alarm_class.objects.get(code=code, name=name, location_id=loc_id)
-                exists_alarm.deleted_at = now
-                exists_alarm.save()
+                exists_alarm.delete()
             except self.alarm_class.DoesNotExist:
-                exists_alarm = self.alarm_class.objects.create(
-                    code=code, name=name, deleted_at=datetime.now(), location_id=loc_id
-                )
-            return exists_alarm
+                pass
+            return None
         alarm, _ = self.alarm_class.objects.get_or_create(
             code=code, name=name, location_id=loc_id
         )
@@ -96,6 +93,9 @@ class DisasterReport(object):
         if area is None:
             return None
         loc, created = self.location_class.objects.update_or_create(**area, defaults={'updated_at': timezone.now()})
+        # もし既存情報があったら全て削除
+        loc.alarms.all().delete()
+        # 警報の情報を取得
         alarm_kinds = ['気象特別警報・警報・注意報', '指定河川洪水予報', '土砂災害警戒情報', '記録的短時間大雨情報']
         for alarm_kind in alarm_kinds:
             alarm = self._get_abstract(loc.code, alarm_kind, since_day, days)
