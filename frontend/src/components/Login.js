@@ -8,6 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
+import * as auth from '../modules/auth';
 
 export default class Login extends Component {
   constructor(props) {
@@ -19,10 +20,11 @@ export default class Login extends Component {
   }
 
   handleLogin(){
-    console.log('login');
-    console.log(this.state.username);
-    console.log(this.state.password);
-    // TODO: Login API
+    auth.login(this.state.username, this.state.password).then((res) => {
+      if (res) {
+        this.props.history.push('/');
+      }
+    })
   }
 
   render() {

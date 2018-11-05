@@ -14,6 +14,7 @@ import Information from './Information';
 import ShelterDetail from './ShelterDetail';
 
 import {mockShelters} from "../config/mockdata";
+import * as auth from '../modules/auth';
 
 export default class Home extends Component {
   constructor(props) {
@@ -23,6 +24,7 @@ export default class Home extends Component {
       canUseGeolocation: null,
       shelters: mockShelters,
       pickShelter: null,
+      isLogin: false,
     };
   }
 
@@ -37,6 +39,7 @@ export default class Home extends Component {
     }).catch((error) => {
       console.error(error);
     });
+    this.setState({isLogin: auth.isLogin()})
   }
 
   pickShelter(shelter) {
@@ -52,7 +55,7 @@ export default class Home extends Component {
             <Typography variant='h6' color='inherit' style={{flex: 1}}>
               Mizukuru Map
             </Typography>
-            <Button color="inherit" component={Link} to="/login">Login</Button>
+            {this.state.isLogin ? null : <Button color="inherit" component={Link} to="/login">Login</Button>}
           </Toolbar>
         </AppBar>
 
