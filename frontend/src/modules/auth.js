@@ -12,7 +12,7 @@ export const login = async (username, password) => {
 
 export const isLogin = () => {
   const token = localStorage.getItem('token');
-  if (token.length === 0) {
+  if (!token) {
     return false;
   }
 
