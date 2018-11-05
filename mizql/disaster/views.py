@@ -1,6 +1,9 @@
+import coreapi
+import coreschema
 from datetime import datetime
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
+from rest_framework.schemas import ManualSchema
 
 from .serializers import LocationSerializer, DemoLocationSerializer
 from .info import DisasterReport
@@ -12,6 +15,14 @@ class LocationView(generics.RetrieveAPIView):
     """
     serializer_class = LocationSerializer
     permission_classes = (permissions.IsAuthenticated,)
+    schema = ManualSchema([
+        coreapi.Field(
+            'lat', required=True, location='query', schema=coreschema.String(description='latitude')
+        ),
+        coreapi.Field(
+            'lon', required=True, location='query', schema=coreschema.String(description='longitude')
+        ),
+    ])
 
     def get_object(self):
         """クエリパラメータから緯度経度取得して情報を返す"""
@@ -30,6 +41,18 @@ class DemoLocationView(generics.RetrieveAPIView):
     """
     serializer_class = DemoLocationSerializer
     permission_classes = (permissions.IsAuthenticated,)
+    schema = ManualSchema([
+        coreapi.Field(
+            'lat', required=True, location='query', schema=coreschema.String(description='latitude')
+        ),
+        coreapi.Field(
+            'lon', required=True, location='query', schema=coreschema.String(description='longitude')
+        ),
+        coreapi.Field(
+            'date', required=False, location='query', schema=coreschema.String(description='%Y-%m-%d_%H:%M%S'),
+            description='%Y-%m-%d_%H:%M%S', example='%Y-%m-%d_%H:%M%S'
+        )
+    ])
 
     def get_object(self):
         """クエリパラメータから緯度経度取得して情報を返す"""
