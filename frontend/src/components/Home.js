@@ -8,6 +8,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import {GetPosition} from '../modules/location';
 import {MapComponent} from "./Map";
+import ShelterList from './ShelterList';
+
+import {mockShelters} from "../config/mockdata";
 
 export default class Home extends Component {
   constructor(props) {
@@ -15,6 +18,7 @@ export default class Home extends Component {
     this.state = {
       location: null,
       canUseGeolocation: null,
+      shelters: mockShelters,
     };
   }
 
@@ -24,7 +28,7 @@ export default class Home extends Component {
         location: {
           lat: value.lat,
           lng: value.lng,
-        }
+        },
       });
     }).catch((error) => {
       console.error(error);
@@ -63,11 +67,20 @@ export default class Home extends Component {
                 {this.state.location ?
                   <MapComponent
                     myPosition={this.state.location}
-                  /> :
+                    shelters={this.state.shelters}
+                  />
+                  :
                   this.state.canUseGeolocation ?
                     <p>GPSを使用できません</p> :
                     <p>現在地取得中です...</p>
                 }
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12}>
+            <Card  style={{margin: 10}}>
+              <CardContent style={{padding: 0, textAlign: 'center'}}>
+                <ShelterList shelters={this.state.shelters}/>
               </CardContent>
             </Card>
           </Grid>
