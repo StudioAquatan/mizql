@@ -29,7 +29,10 @@ export const MapComponent = compose(
         <Marker
           key={key}
           title={shelter.name}
-          position={shelter.position}
+          position={{
+            lat: shelter.lat,
+            lng: shelter.lon,
+          }}
           onClick={() => console.log(shelter.name)}
         />
       )) : null
