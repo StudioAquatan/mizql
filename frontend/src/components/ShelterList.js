@@ -9,10 +9,6 @@ import Paper from '@material-ui/core/Paper';
 
 export default class ShelterList extends Component {
 
-  handleShelterClick(e, shelter) {
-    console.log(`clicked ${shelter.name}`);
-  }
-
   render(){
     if(!this.props.shelters){
       console.log(("no shelters"));
@@ -36,7 +32,7 @@ export default class ShelterList extends Component {
               <TableRow
                 key={key}
                 hover
-                onClick={(e) => this.handleShelterClick(e, shelter)}
+                onClick={(e) => this.props.pickShelter(shelter)}
               >
                 <TableCell>{shelter.name}</TableCell>
                 <TableCell numeric>{shelter.distance} m</TableCell>

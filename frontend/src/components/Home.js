@@ -9,6 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import {GetPosition} from '../modules/location';
 import {MapComponent} from "./Map";
 import ShelterList from './ShelterList';
+import Information from './Information';
+import ShelterDetail from './ShelterDetail';
 
 import {mockShelters} from "../config/mockdata";
 
@@ -19,6 +21,7 @@ export default class Home extends Component {
       location: null,
       canUseGeolocation: null,
       shelters: mockShelters,
+      pickShelter: null,
     };
   }
 
@@ -35,12 +38,15 @@ export default class Home extends Component {
     });
   }
 
+  pickShelter(shelter) {
+    console.log(shelter);
+    this.setState({pickShelter: shelter});
+  }
+
   render() {
     return (
       <React.Fragment>
-        <AppBar
-          position="static"
-        >
+        <AppBar position="static">
           <Toolbar>
             <Typography variant='h6' color='inherit' style={{flex: 1}}>
               Mizukuru Map
@@ -48,26 +54,16 @@ export default class Home extends Component {
             <Button color="inherit" href="/login">Login</Button>
           </Toolbar>
         </AppBar>
-        <Grid
-          container
-          justify='center'
-        >
-          <Grid item xs={12}>
-            <Card
-              style={{
-                margin: 10,
-              }}
-            >
-              <CardContent
-                style={{
-                  padding: 0,
-                  textAlign: 'center'
-                }}
-              >
+
+        <Grid container justify='center'>
+          <Grid item xs={12} md={6}>
+            <Card style={{margin: 10}}>
+              <CardContent style={{padding: 0, textAlign: 'center'}}>
                 {this.state.location ?
                   <MapComponent
                     myPosition={this.state.location}
                     shelters={this.state.shelters}
+                    pickShelter={this.pickShelter.bind(this)}
                   />
                   :
                   this.state.canUseGeolocation ?
@@ -77,13 +73,36 @@ export default class Home extends Component {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={12}>
-            <Card  style={{margin: 10}}>
-              <CardContent style={{padding: 0, textAlign: 'center'}}>
-                <ShelterList shelters={this.state.shelters}/>
+
+          <Grid item xs={12} md={6}>
+            <Card style={{margin: 10, height: '400px'}}>
+              <CardContent>
+                <Information/>
               </CardContent>
             </Card>
           </Grid>
+
+          {this.state.pickShelter ?
+            <Grid item xs={12}>
+              <Card style={{margin: 10}}>
+                <CardContent style={{padding: 0, textAlign: 'center'}}>
+                  <ShelterDetail
+                    shelter={this.state.pickShelter}
+                    pickShelter={this.pickShelter.bind(this)}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
+            :
+            <Grid item xs={12}>
+              <Card style={{margin: 10}}>
+                <CardContent style={{padding: 0, textAlign: 'center'}}>
+                  <ShelterList shelters={this.state.shelters} pickShelter={this.pickShelter.bind(this)}/>
+                </CardContent>
+              </Card>
+            </Grid>
+          }
+
         </Grid>
       </React.Fragment>
     )
