@@ -31,7 +31,7 @@ deps:
 	fi
 
 frontimage: $(FRONT_SRCS)
-	docker build . -t studioaquatan/$(NAME)-front:latest -f Dockerfile.front
+	docker build . -t studioaquatan/$(NAME)-front:latest -f frontend/Dockerfile
 
 image: $(SRCS) $(DOCKERFILE)
 	$(eval VERSION := $(shell git describe --tags || echo "v0.0.0"))
@@ -91,5 +91,8 @@ prod-start:
 
 prod-manage:
 	docker-compose -f docker-compose.prod.yml exec webapp pipenv run python manage.py $(ARGS)
+
+prod-stop:
+	docker-compose -f docker-compose.prod.yml stop
 
 .PHONY: deps image rundb stopdb cleandb qa-start qa-stop qa-manage qa-clean ;
