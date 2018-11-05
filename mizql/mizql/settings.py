@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'django_filters',
     'accounts',
     'evacuation',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -68,6 +69,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'mizql.urls'
@@ -175,5 +177,6 @@ JWT_AUTH = {
 
 if not DEBUG:
     FORCE_SCRIPT_NAME = '/api'
+    CORS_ORIGIN_ALLOW_ALL = True
 
 YOLP_APP_ID = os.getenv('YOLP_APP_ID')
