@@ -2,7 +2,7 @@ FROM node:11.1.0-alpine as builder
 
 ENV PROJECT_DIR /opt/mizql
 
-ADD ./frontend ${PROJECT_DIR}
+ADD ./ ${PROJECT_DIR}
 
 WORKDIR ${PROJECT_DIR}
 
