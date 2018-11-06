@@ -15,6 +15,7 @@ mysqlclient = "*"
 gunicorn = "*"
 requests = "*"
 django-cors-headers = "*"
+drf-nested-routers = "*"
 
 [dev-packages]
 
