@@ -25,6 +25,15 @@ class Alarm(models.Model):
     class Meta:
         ordering = ['-created_at']
 
+    @property
+    def alarm_type(self):
+        t = 0
+        if "注意報" in self.name:
+            t = 1
+        elif "警報" in self.name:
+            t = 2
+        return t
+
 
 class DemoLocation(models.Model):
     """
@@ -49,3 +58,12 @@ class DemoAlarm(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+
+    @property
+    def alarm_type(self):
+        t = 0
+        if "注意報" in self.name:
+            t = 1
+        elif "警報" in self.name:
+            t = 2
+        return t

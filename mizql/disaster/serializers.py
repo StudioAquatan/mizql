@@ -6,10 +6,11 @@ class AlarmSerializer(serializers.ModelSerializer):
     """
     注意報・警報のシリアライザ
     """
+    type = serializers.IntegerField(read_only=True, source='alarm_type')
 
     class Meta:
         model = Alarm
-        fields = ('pk', 'code', 'name', 'created_at')
+        fields = ('pk', 'code', 'name', 'created_at', 'type')
 
 
 class LocationSerializer(serializers.ModelSerializer):
@@ -25,9 +26,11 @@ class LocationSerializer(serializers.ModelSerializer):
 
 
 class DemoAlarmSerializer(serializers.ModelSerializer):
+    type = serializers.IntegerField(read_only=True, source='alarm_type')
+
     class Meta:
         model = DemoAlarm
-        fields = ('pk', 'code', 'name', 'created_at')
+        fields = ('pk', 'code', 'name', 'created_at', 'type')
 
 
 class DemoLocationSerializer(serializers.ModelSerializer):
