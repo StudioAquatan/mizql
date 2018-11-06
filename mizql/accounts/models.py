@@ -43,6 +43,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
     username = models.CharField(verbose_name='ユーザ名', max_length=100, unique=True)
     email = models.EmailField(max_length=255, unique=False, default='hoge@fuga.com')
+    first_name = models.CharField(verbose_name='名', max_length=50, default='太郎')
+    last_name = models.CharField(verbose_name='姓', max_length=50, default='工繊')
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
