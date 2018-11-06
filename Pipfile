@@ -16,6 +16,7 @@ gunicorn = "*"
 requests = "*"
 django-cors-headers = "*"
 drf-nested-routers = "*"
+tqdm = "*"
 
 [dev-packages]
 
