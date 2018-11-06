@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'django_filters',
     'accounts',
     'evacuation',
+    'disaster',
     'corsheaders',
 ]
 
@@ -179,5 +180,6 @@ if DEBUG:
     CORS_ORIGIN_ALLOW_ALL = True
 else:
     FORCE_SCRIPT_NAME = '/api'
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 YOLP_APP_ID = os.getenv('YOLP_APP_ID')

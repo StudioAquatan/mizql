@@ -15,20 +15,29 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
 from rest_framework.routers import DefaultRouter
 from rest_framework_swagger.views import get_swagger_view
 
 from accounts.views import UserViewSets
 from evacuation.views import ShelterViewSets
+from disaster.views import LocationView, DemoLocationView
 
 router = DefaultRouter()
 router.register(r'users', UserViewSets, basename='users')
 router.register(r'shelters', ShelterViewSets, basename='shelters')
 
+if not settings.DEBUG:
+    url = 'https://mizql.aquatan.studio/api/'
+else:
+    url = None
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('_/', include('accounts.urls')),
     path('', include(router.urls)),
+    path('area/', LocationView.as_view()),
+    path('demo-area/', DemoLocationView.as_view()),
     path('auth/', include('djoser.urls.jwt')),
-    path('swagger/', get_swagger_view(title='mizql API Doc')),
+    path('swagger/', get_swagger_view(title='mizql API Doc', url=url)),
 ]
