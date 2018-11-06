@@ -1,20 +1,21 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Grid from '@material-ui/core/Grid';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import {GetPosition} from '../modules/location';
-import {MapComponent} from "./Map";
+import {
+  AppBar,
+  Button,
+  Card, CardContent,
+  Grid,
+  Typography,
+  Toolbar
+} from '@material-ui/core';
+import * as location from '../modules/location';
+import * as auth from '../modules/auth';
+import * as mockdata from "../config/mockdata";
+import ShelterMap from "./Map";
 import ShelterList from './ShelterList';
 import Information from './Information';
 import ShelterDetail from './ShelterDetail';
 
-import {mockShelters} from "../config/mockdata";
-import * as auth from '../modules/auth';
 
 export default class Home extends Component {
   constructor(props) {
@@ -22,14 +23,14 @@ export default class Home extends Component {
     this.state = {
       location: null,
       canUseGeolocation: null,
-      shelters: mockShelters,
+      shelters: mockdata.shelters,
       pickShelter: null,
       isLogin: false,
     };
   }
 
   componentDidMount() {
-    GetPosition().then((value) => {
+    location.getPosition().then((value) => {
       this.setState({
         location: {
           lat: value.lat,
@@ -58,7 +59,7 @@ export default class Home extends Component {
       <React.Fragment>
         <AppBar position="static">
           <Toolbar>
-            <Typography variant='h6' color='inherit' style={{flex: 1}}>
+            <Typography variant='h6' color='inherit' component={Link} to="/" style={{flex: 1, textDecoration: 'none'}}>
               Mizukuru Map
             </Typography>
             {this.state.isLogin ?
@@ -73,7 +74,7 @@ export default class Home extends Component {
             <Card style={{margin: 10}}>
               <CardContent style={{padding: 0, textAlign: 'center'}}>
                 {this.state.location ?
-                  <MapComponent
+                  <ShelterMap
                     myPosition={this.state.location}
                     shelters={this.state.shelters}
                     pickShelter={this.pickShelter.bind(this)}

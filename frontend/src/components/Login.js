@@ -1,13 +1,15 @@
 import React, {Component} from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import FormControl from '@material-ui/core/FormControl';
-import Grid from '@material-ui/core/Grid';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
+import {Link} from 'react-router-dom';
+import {
+  AppBar,
+  Button,
+  Card, CardContent,
+  FormControl,
+  Grid,
+  TextField,
+  Toolbar,
+  Typography
+} from '@material-ui/core';
 import * as auth from '../modules/auth';
 
 export default class Login extends Component {
@@ -32,7 +34,7 @@ export default class Login extends Component {
       <React.Fragment>
         <AppBar title="Header" position="static">
           <Toolbar>
-            <Typography variant='h6' color='inherit' style={{flex: 1}}>
+            <Typography variant='h6' color='inherit' component={Link} to="/" style={{flex: 1, textDecoration: 'none'}}>
               Mizukuru Map
             </Typography>
           </Toolbar>
