@@ -64,3 +64,17 @@ class DemoLocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = DemoLocation
         fields = ('pk', 'name', 'alarms', 'updated_at', 'rain')
+
+    def to_representation(self, instance):
+        data = super(DemoLocationSerializer, self).to_representation(instance)
+        alarms = [alarm['name'] for alarm in data['alarms']]
+        danger_alarms = ['洪水警報', '大雨警報']
+        score = len(list(set(alarms).intersection(set(danger_alarms))))
+        observed_amount = sum([observed['amount'] for observed in data['rain']['observations']])
+        score += observed_amount // 20
+        forecast_amount = sum([forecast['amount'] for forecast in data['rain']['forecasts']])
+        score += forecast_amount // 20
+        data['level'] = score
+        return data
+
+
