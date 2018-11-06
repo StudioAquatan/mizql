@@ -67,3 +67,16 @@ class DemoAlarm(models.Model):
         elif "警報" in self.name:
             t = 2
         return t
+
+
+class DemoRainForecast(models.Model):
+    """
+    デモ用の降水量情報
+    """
+    amount = models.FloatField('降水量')
+    created_at = models.DateTimeField('取得日時')
+    is_observed = models.BooleanField('観測値かどうか')
+    location = models.ForeignKey(DemoLocation, on_delete=models.CASCADE, related_name='rain')
+
+    class Meta:
+        ordering = ['-created_at']
