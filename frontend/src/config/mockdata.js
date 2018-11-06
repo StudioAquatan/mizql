@@ -94,3 +94,38 @@ export const area = {
   ],
   updated_at: "2018-11-06T17:37:41.925413+09:00"
 };
+
+export const friends = [
+  {
+    username: "hoge",
+    refuged: false,
+    shelter: null,
+  },
+  {
+    username: "foo",
+    refuged: true,
+    shelter: {
+      name: "京都ノートルダム女子大学",
+      address: "京都府京都市左京区下鴨南野々神町1",
+      lat: 35.05070445,
+      lon: 135.7723571,
+      distance: 970.0
+    },
+  },
+  {
+    username: "bar",
+    refuged: true,
+    shelter: {
+      name: "京都市立修学院中学校",
+      address: "京都府京都市左京区一乗寺御祭田町2",
+      lat: 35.04245594,
+      lon: 135.7885355,
+      distance: 990.0
+    }
+  },
+  {
+    username: "piyo",
+    refuged: false,
+    shelter: null,
+  },
+];

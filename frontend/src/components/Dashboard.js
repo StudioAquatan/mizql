@@ -3,7 +3,8 @@ import {
   Grid,
   Paper,
   Tabs, Tab,
-  List, ListItem, ListItemIcon, ListItemText, ListSubheader
+  List, ListItem, ListItemIcon, ListItemText, ListSubheader,
+  Table, TableBody, TableCell, TableHead, TableFooter, TableSortLabel, TablePagination, TableRow
 } from '@material-ui/core';
 import * as icons from '@material-ui/icons';
 import * as mockdata from '../config/mockdata';
@@ -45,8 +46,12 @@ export default class Dashboard extends Component {
             >
               {mockdata.area.alarms.map((alarm, key) => (
                 <ListItem key={key}>
-                  {alarm.type === 0 && <ListItemIcon><icons.Warning style={{color: "#D7DF01"}}/></ListItemIcon>}
-                  {alarm.type === 1 && <ListItemIcon><icons.Error style={{color: "#DF0101"}}/></ListItemIcon>}
+                  {alarm.type === 0 && <ListItemIcon>
+                    <icons.Warning style={{color: "#D7DF01"}}/>
+                  </ListItemIcon>}
+                  {alarm.type === 1 && <ListItemIcon>
+                    <icons.Error style={{color: "#DF0101"}}/>
+                  </ListItemIcon>}
                   <ListItemText primary={alarm.name}/>
                 </ListItem>
               ))}
@@ -60,9 +65,26 @@ export default class Dashboard extends Component {
         }
 
         {this.state.tab === 1 &&
-        <React.Fragment>
-          <p>友人の避難状況</p>
-        </React.Fragment>
+        <div style={{padding: '10px'}}>
+          <Table style={{minWidth: '600px'}}>
+            <TableHead>
+              <TableRow>
+                <TableCell>名前</TableCell>
+                <TableCell>避難状況</TableCell>
+                <TableCell>避難先</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {mockdata.friends.map((friend, key) => (
+                <TableRow key={key}>
+                  <TableCell>{friend.username}</TableCell>
+                  <TableCell>{friend.refuged ? "避難済み" : "-"}</TableCell>
+                  <TableCell onClick={(e) => this.props.pickShelter(friend.shelter)}>{friend.refuged ? friend.shelter.name : "-"}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
         }
       </Paper>
     )
