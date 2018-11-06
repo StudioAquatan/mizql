@@ -28,7 +28,7 @@ router.register(r'users', UserViewSets, basename='users')
 router.register(r'shelters', ShelterViewSets, basename='shelters')
 
 if not settings.DEBUG:
-    url = 'api/'
+    url = '/api/'
 else:
     url = None
 
