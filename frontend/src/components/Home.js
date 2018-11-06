@@ -58,7 +58,6 @@ export default class Home extends Component {
         showDetail: true,
       });
     }
-    console.log(shelter);
   }
 
   logout() {
@@ -92,7 +91,7 @@ export default class Home extends Component {
           </Grid>
 
           {this.state.canUseGeolocation ?
-            <Grid item xs={12} md={6} justify="center">
+            <Grid item xs={12} md={6}>
               <Card style={{margin: 10, height: '400px'}}>
                 <CardContent style={{padding: 0, textAlign: 'center'}}>
                   {this.state.location ?
@@ -126,6 +125,7 @@ export default class Home extends Component {
           onClose={() => this.pickShelter(null)}
         >
           <ShelterDetail
+            myPosition={this.state.location}
             shelter={this.state.pickShelter}
             pickShelter={this.pickShelter.bind(this)}
           />

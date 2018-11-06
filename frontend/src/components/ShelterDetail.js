@@ -14,6 +14,7 @@ import {
   YAxis,
 } from 'recharts';
 import * as mockdata from '../config/mockdata';
+import * as location from '../modules/location';
 import theme from '../config/theme';
 
 export default class ShelterDetail extends Component {
@@ -54,6 +55,7 @@ export default class ShelterDetail extends Component {
                 style={{boxShadow: 'none'}}
                 variant="contained"
                 color="secondary"
+                href={location.getGoogleMapRouteLink(this.props.myPosition, {lat: this.state.shelter.lat, lng: this.state.shelter.lon})}
               >
                 ルートを表示
               </Button>
