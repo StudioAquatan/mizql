@@ -33,7 +33,7 @@ export const MapComponent = compose(
             lat: shelter.lat,
             lng: shelter.lon,
           }}
-          onClick={() => console.log(shelter.name)}
+          onClick={() => props.pickShelter(shelter)}
         />
       )) : null
     }

@@ -8,6 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
+import * as auth from '../modules/auth';
 
 export default class Login extends Component {
   constructor(props) {
@@ -19,40 +20,28 @@ export default class Login extends Component {
   }
 
   handleLogin(){
-    console.log('login');
-    console.log(this.state.username);
-    console.log(this.state.password);
-    // TODO: Login API
+    auth.login(this.state.username, this.state.password).then((res) => {
+      if (res) {
+        this.props.history.push('/');
+      }
+    })
   }
 
   render() {
     return (
       <React.Fragment>
-        <AppBar
-          title="Header"
-          position="static"
-        >
+        <AppBar title="Header" position="static">
           <Toolbar>
             <Typography variant='h6' color='inherit' style={{flex: 1}}>
               Mizukuru Map
             </Typography>
           </Toolbar>
         </AppBar>
-        <Grid
-          container
-          justify='center'
-        >
-          <Grid item>
-            <Card
-              style={{
-                margin: 40,
-                padding: 20,
-              }}
-            >
-              <CardContent
-                style={{textAlign: 'center'}}
-              >
-                <FormControl>
+        <Grid container justify='center'>
+          <Grid item xs={10} sm={8} md={7} lg={6} xl={5}>
+            <Card style={{marginTop: 30, padding: 20}}>
+              <CardContent style={{textAlign: 'center'}}>
+                <FormControl style={{width: '100%'}}>
                   <TextField
                     required
                     label="Username"
@@ -71,6 +60,7 @@ export default class Login extends Component {
                     style={{
                       marginTop: 16,
                       marginBottom: 8,
+                      boxShadow: 'none',
                     }}
                     variant="contained"
                     color="primary"
