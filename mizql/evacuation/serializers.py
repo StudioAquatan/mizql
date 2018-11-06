@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Shelter
+from .models import Shelter, EvacuationHistory, PersonalEvacuationHistory
 
 
 def round_distance(distance: float, digit: int=-1) -> int:
@@ -21,3 +21,28 @@ class ShelterSerializer(serializers.ModelSerializer):
         dist_key = 'distance'
         data[dist_key] = round_distance(getattr(instance, dist_key, 0.0) * 1000)
         return data
+
+
+class EvacuationHistorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = EvacuationHistory
+        fields = ('created_at', 'count')
+
+
+class PersonalEvacuationHistorySerializer(serializers.ModelSerializer):
+
+    shelter_id = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = PersonalEvacuationHistory
+        fields = ('pk', 'shelter_id', 'is_evacuated')
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        history, is_created = PersonalEvacuationHistory.objects.get_or_create(
+            shelter_id=validated_data['shelter_id'], user=user, is_evacuated=validated_data['is_evacuated']
+        )
+        if not is_created:
+            raise serializers.ValidationError({'is_evacuated': 'You have already evacuate.'})
+        return history
