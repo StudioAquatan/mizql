@@ -22,6 +22,8 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
+        EvacuationHistory.objects.all().delete()
+        PersonalEvacuationHistory.objects.all().delete()
         all_shelters = list(Shelter.objects.all())
         all_users = list(User.objects.all())
         for shelter in tqdm(all_shelters, desc='Shelters'):
