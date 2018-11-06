@@ -35,3 +35,12 @@ export const shelters = [
     "distance": 990.0
   }
 ];
+
+export const evacuees = [
+  {time: "12:00", num: 10},
+  {time: "13:00", num: 20},
+  {time: "14:00", num: 50},
+  {time: "15:00", num: 90},
+  {time: "16:00", num: 100},
+  {time: "17:00", num: 115},
+];

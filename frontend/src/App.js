@@ -3,7 +3,7 @@ import {BrowserRouter, Route} from 'react-router-dom';
 import Home from './components/Home';
 import Login from './components/Login';
 import {MuiThemeProvider} from '@material-ui/core/styles';
-import {theme} from './config/theme';
+import theme from './config/theme';
 import {Store} from './modules/store';
 
 const App = () => (

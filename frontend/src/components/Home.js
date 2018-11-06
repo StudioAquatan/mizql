@@ -4,9 +4,11 @@ import {
   AppBar,
   Button,
   Card, CardContent,
+  CircularProgress,
+  Drawer,
   Grid,
   Typography,
-  Toolbar
+  Toolbar,
 } from '@material-ui/core';
 import * as location from '../modules/location';
 import * as auth from '../modules/auth';
@@ -22,9 +24,10 @@ export default class Home extends Component {
     super(props);
     this.state = {
       location: null,
-      canUseGeolocation: null,
+      canUseGeolocation: location.canGetPosition(),
       shelters: mockdata.shelters,
       pickShelter: null,
+      showDetail: false,
       isLogin: false,
     };
   }
@@ -44,8 +47,17 @@ export default class Home extends Component {
   }
 
   pickShelter(shelter) {
-    console.log(shelter);
-    this.setState({pickShelter: shelter});
+    if (!shelter) {
+      this.setState({
+        pickShelter: null,
+        showDetail: false,
+      });
+    } else {
+      this.setState({
+        pickShelter: shelter,
+        showDetail: true,
+      });
+    }
   }
 
   logout() {
@@ -71,24 +83,6 @@ export default class Home extends Component {
 
         <Grid container justify='center'>
           <Grid item xs={12} md={6}>
-            <Card style={{margin: 10}}>
-              <CardContent style={{padding: 0, textAlign: 'center'}}>
-                {this.state.location ?
-                  <ShelterMap
-                    myPosition={this.state.location}
-                    shelters={this.state.shelters}
-                    pickShelter={this.pickShelter.bind(this)}
-                  />
-                  :
-                  this.state.canUseGeolocation ?
-                    <p>GPSを使用できません</p> :
-                    <p>現在地取得中です...</p>
-                }
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid item xs={12} md={6}>
             <Card style={{margin: 10, height: '400px'}}>
               <CardContent>
                 <Information/>
@@ -96,28 +90,46 @@ export default class Home extends Component {
             </Card>
           </Grid>
 
-          {this.state.pickShelter ?
-            <Grid item xs={12}>
-              <Card style={{margin: 10}}>
+          {this.state.canUseGeolocation ?
+            <Grid item xs={12} md={6}>
+              <Card style={{margin: 10, height: '400px'}}>
                 <CardContent style={{padding: 0, textAlign: 'center'}}>
-                  <ShelterDetail
-                    shelter={this.state.pickShelter}
-                    pickShelter={this.pickShelter.bind(this)}
-                  />
+                  {this.state.location ?
+                      <ShelterMap
+                      myPosition={this.state.location}
+                      shelters={this.state.shelters}
+                      pickShelter={this.pickShelter.bind(this)}
+                      />
+                    :
+                    <CircularProgress color="secondary" style={{marginTop: '180px'}}/>
+                   }
                 </CardContent>
               </Card>
             </Grid>
             :
-            <Grid item xs={12}>
-              <Card style={{margin: 10}}>
-                <CardContent style={{padding: 0, textAlign: 'center'}}>
-                  <ShelterList shelters={this.state.shelters} pickShelter={this.pickShelter.bind(this)}/>
-                </CardContent>
-              </Card>
-            </Grid>
+            <Typography>GPSを使用できません</Typography>
           }
 
+          <Grid item xs={12}>
+            <Card style={{margin: 10}}>
+              <CardContent style={{padding: 0, textAlign: 'center'}}>
+                <ShelterList shelters={this.state.shelters} pickShelter={this.pickShelter.bind(this)}/>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
+
+        <Drawer
+          anchor="bottom"
+          open={this.state.showDetail}
+          onClose={() => this.pickShelter(null)}
+        >
+          <ShelterDetail
+            myPosition={this.state.location}
+            shelter={this.state.pickShelter}
+            pickShelter={this.pickShelter.bind(this)}
+          />
+        </Drawer>
       </React.Fragment>
     )
   }
