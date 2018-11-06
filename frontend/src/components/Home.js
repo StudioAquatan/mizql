@@ -4,6 +4,7 @@ import {
   AppBar,
   Button,
   Card, CardContent,
+  Drawer,
   Grid,
   Typography,
   Toolbar
@@ -25,6 +26,7 @@ export default class Home extends Component {
       canUseGeolocation: null,
       shelters: mockdata.shelters,
       pickShelter: null,
+      showDetail: false,
       isLogin: false,
     };
   }
@@ -44,8 +46,18 @@ export default class Home extends Component {
   }
 
   pickShelter(shelter) {
+    if (!shelter) {
+      this.setState({
+        pickShelter: null,
+        showDetail: false,
+      });
+    } else {
+      this.setState({
+        pickShelter: shelter,
+        showDetail: true,
+      });
+    }
     console.log(shelter);
-    this.setState({pickShelter: shelter});
   }
 
   logout() {
@@ -96,28 +108,25 @@ export default class Home extends Component {
             </Card>
           </Grid>
 
-          {this.state.pickShelter ?
-            <Grid item xs={12}>
-              <Card style={{margin: 10}}>
-                <CardContent style={{padding: 0, textAlign: 'center'}}>
-                  <ShelterDetail
-                    shelter={this.state.pickShelter}
-                    pickShelter={this.pickShelter.bind(this)}
-                  />
-                </CardContent>
-              </Card>
-            </Grid>
-            :
-            <Grid item xs={12}>
-              <Card style={{margin: 10}}>
-                <CardContent style={{padding: 0, textAlign: 'center'}}>
-                  <ShelterList shelters={this.state.shelters} pickShelter={this.pickShelter.bind(this)}/>
-                </CardContent>
-              </Card>
-            </Grid>
-          }
-
+          <Grid item xs={12}>
+            <Card style={{margin: 10}}>
+              <CardContent style={{padding: 0, textAlign: 'center'}}>
+                <ShelterList shelters={this.state.shelters} pickShelter={this.pickShelter.bind(this)}/>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
+
+        <Drawer
+          anchor="bottom"
+          open={this.state.showDetail}
+          onClose={() => this.pickShelter(null)}
+        >
+          <ShelterDetail
+            shelter={this.state.pickShelter}
+            pickShelter={this.pickShelter.bind(this)}
+          />
+        </Drawer>
       </React.Fragment>
     )
   }
