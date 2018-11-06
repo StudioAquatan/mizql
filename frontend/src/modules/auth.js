@@ -2,7 +2,8 @@ import * as api from './api';
 
 export const login = async (username, password) => {
   const result = await api.login(username, password);
-  if (result.error) {
+  console.log(result);
+  if (result.non_field_errors) {
     return false;
   }
 
@@ -20,3 +21,6 @@ export const isLogin = () => {
   return true;
 };
 
+export const logout = () => {
+  localStorage.removeItem('token');
+};

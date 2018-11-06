@@ -47,6 +47,12 @@ export default class Home extends Component {
     this.setState({pickShelter: shelter});
   }
 
+  logout() {
+    auth.logout();
+    alert('ログアウトしました');
+    this.setState({isLogin: false});
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -55,7 +61,10 @@ export default class Home extends Component {
             <Typography variant='h6' color='inherit' style={{flex: 1}}>
               Mizukuru Map
             </Typography>
-            {this.state.isLogin ? null : <Button color="inherit" component={Link} to="/login">Login</Button>}
+            {this.state.isLogin ?
+              <Button color="inherit" onClick={() => this.logout()}>Logout</Button>
+              :
+              <Button color="inherit" component={Link} to="/login">Login</Button>}
           </Toolbar>
         </AppBar>
 
