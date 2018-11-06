@@ -2,10 +2,12 @@ import React, {Component} from 'react';
 import {
   Grid,
   Paper,
-  Tabs, Tab
+  Tabs, Tab,
+  Table, TableBody, TableCell, TableHead, TableFooter, TableSortLabel, TablePagination, TableRow
 } from '@material-ui/core';
 import * as mockdata from '../config/mockdata';
 import * as auth from '../modules/auth';
+import * as util from '../modules/util';
 
 export default class Dashboard extends Component {
   constructor(props) {
@@ -36,15 +38,24 @@ export default class Dashboard extends Component {
         </Paper>
 
         {this.state.tab === 0 &&
-        <Grid container justify='center'>
+        <Grid container justify='center' style={{padding: 10}}>
           <Grid item xs={12} md={6} lg={6} xl={6}>
-            <p>現在地情報</p>
-            <p>住所?</p>
-            {mockdata.area.alarms.map((alarm, key) => (
-              <React.Fragment key={key}>
-                <p>{alarm.name} : {alarm.created_at}</p>
-              </React.Fragment>
-            ))}
+            <Table style={{minWidth: 600}}>
+              <TableHead>
+                <TableRow>
+                  <TableCell>発令事項</TableCell>
+                  <TableCell>発令時間</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {mockdata.area.alarms.map((alarm, key) => (
+                  <TableRow key={key}>
+                    <TableCell>{alarm.name}</TableCell>
+                    <TableCell>{util.parseDateStr(alarm.created_at)}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </Grid>
           <Grid item xs={12} md={6} lg={6} xl={6}>
             <p>危険度</p>
