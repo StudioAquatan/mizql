@@ -17,10 +17,12 @@ class LocationView(generics.RetrieveAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     schema = ManualSchema([
         coreapi.Field(
-            'lat', required=True, location='query', schema=coreschema.String(description='latitude')
+            'lat', required=True, location='query', schema=coreschema.String(description='latitude'),
+            example='35.048900', description='緯度'
         ),
         coreapi.Field(
-            'lon', required=True, location='query', schema=coreschema.String(description='longitude')
+            'lon', required=True, location='query', schema=coreschema.String(description='longitude'),
+            example='135.780418', description='経度'
         ),
     ])
 
@@ -43,14 +45,16 @@ class DemoLocationView(generics.RetrieveAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     schema = ManualSchema([
         coreapi.Field(
-            'lat', required=True, location='query', schema=coreschema.String(description='latitude')
+            'lat', required=True, location='query', schema=coreschema.String(description='latitude'),
+            example='35.048900', description='緯度'
         ),
         coreapi.Field(
-            'lon', required=True, location='query', schema=coreschema.String(description='longitude')
+            'lon', required=True, location='query', schema=coreschema.String(description='longitude'),
+            example='135.780418', description='経度'
         ),
         coreapi.Field(
             'date', required=False, location='query', schema=coreschema.String(description='%Y-%m-%d_%H:%M%S'),
-            description='%Y-%m-%d_%H:%M%S', example='%Y-%m-%d_%H:%M%S'
+            description='%Y-%m-%d_%H:%M%S', example='2018-09-04_12:00:00'
         )
     ])
 
