@@ -14,7 +14,7 @@ class LocationView(generics.RetrieveAPIView):
     地域の情報を取得するエンドポイント
     """
     serializer_class = LocationSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     schema = ManualSchema([
         coreapi.Field(
             'lat', required=True, location='query', schema=coreschema.String(description='latitude'),
@@ -42,7 +42,7 @@ class DemoLocationView(generics.RetrieveAPIView):
     デモの情報を返す
     """
     serializer_class = DemoLocationSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     schema = ManualSchema([
         coreapi.Field(
             'lat', required=True, location='query', schema=coreschema.String(description='latitude'),

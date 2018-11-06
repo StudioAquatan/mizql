@@ -7,7 +7,7 @@ from .serializers import ShelterSerializer, EvacuationHistorySerializer, Persona
 
 
 class ShelterViewSets(viewsets.ReadOnlyModelViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     serializer_class = ShelterSerializer
     schema = schemas.AutoSchema(
         manual_fields=[
@@ -48,8 +48,14 @@ class ShelterViewSets(viewsets.ReadOnlyModelViewSet):
 class EvacuationHistoryViewSets(mixins.ListModelMixin,
                                 mixins.CreateModelMixin,
                                 viewsets.GenericViewSet):
+    permission_classes = (permissions.AllowAny,)
     queryset = EvacuationHistory.objects.all()
     serializer_class = EvacuationHistorySerializer
+
+    def get_permissions(self):
+        if self.action == 'create':
+            self.permission_classes = [permissions.IsAuthenticated]
+        return super(EvacuationHistoryViewSets, self).get_permissions()
 
     def list(self, request, *args, **kwargs):
         shelter_id = int(kwargs['shelter_pk'])
@@ -60,8 +66,14 @@ class EvacuationHistoryViewSets(mixins.ListModelMixin,
 
 class EvacuationViewSets(mixins.CreateModelMixin,
                          viewsets.GenericViewSet):
+    permission_classes = (permissions.AllowAny,)
     queryset = PersonalEvacuationHistory.objects.all()
     serializer_class = PersonalEvacuationHistorySerializer
+
+    def get_permissions(self):
+        if self.action == 'create':
+            self.permission_classes = [permissions.IsAuthenticated]
+        return super(EvacuationViewSets, self).get_permissions()
 
     def create(self, request, *args, **kwargs):
         shelter_id = int(kwargs['shelter_pk'])
