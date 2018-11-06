@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework import serializers
 from .models import Shelter, EvacuationHistory, PersonalEvacuationHistory
 
@@ -41,7 +42,8 @@ class PersonalEvacuationHistorySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = self.context['request'].user
         history, is_created = PersonalEvacuationHistory.objects.get_or_create(
-            shelter_id=validated_data['shelter_id'], user=user, is_evacuated=validated_data['is_evacuated']
+            shelter_id=validated_data['shelter_id'], user=user, is_evacuated=validated_data['is_evacuated'],
+            created_at=timezone.now()
         )
         if not is_created:
             raise serializers.ValidationError({'is_evacuated': 'You have already evacuate.'})

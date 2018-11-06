@@ -68,7 +68,7 @@ class PersonalEvacuationHistory(models.Model):
                              related_name='evacuation_histories')
     shelter = models.ForeignKey(Shelter, verbose_name='避難所', on_delete=models.CASCADE,
                                 related_name='personal_histories')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField('日付')
     is_evacuated = models.BooleanField(verbose_name='避難しているか')
 
     class Meta:
