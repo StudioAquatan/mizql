@@ -49,6 +49,7 @@ class Shelter(models.Model):
     address = models.CharField(verbose_name='住所', max_length=255)
     lat = models.FloatField(verbose_name='緯度')
     lon = models.FloatField(verbose_name='経度')
+    capacity = models.IntegerField('収容可能人数', null=True)
 
     objects = NearbyShelterManager()
 

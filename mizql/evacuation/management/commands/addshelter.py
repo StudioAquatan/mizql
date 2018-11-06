@@ -2,6 +2,7 @@ import csv
 import codecs
 import errno
 import os
+import random
 import pathlib
 from django.core.management.base import BaseCommand
 
@@ -36,8 +37,9 @@ class Command(BaseCommand):
             keys = ['name', 'address', 'lat', 'lon']
             for row in reader:
                 data = dict(zip(keys, row))
+                capacity = random.choice(list(range(50, 500)))
                 obj, created = Shelter.objects.update_or_create(
-                    lat=data.pop('lat'), lon=data.pop('lon'), defaults=data
+                    lat=data.pop('lat'), lon=data.pop('lon'), defaults=data, capacity=capacity
                 )
                 if created:
                     print("Created: ", data['name'])
