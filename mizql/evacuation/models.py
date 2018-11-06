@@ -78,26 +78,28 @@ class PersonalEvacuationHistory(models.Model):
 
 class EvacuationHistoryManager(models.Manager):
 
-    def create(self, shelter: Shelter):
+    def create(self, shelter: Shelter, now=None):
         """
         10分前から現在までの避難人数を取得
         :param shelter:
+        :param now: 時刻
         :return:
         """
-        now = timezone.now()
+        if now is None:
+            now = timezone.now()
+        latest_date = now
+        latest_count = 0
         # 最新の履歴から人数を取得
-        personal_histories = PersonalEvacuationHistory.objects.prefetch_related('shelter').filter(shelter=shelter)
-        try:
-            latest_history = EvacuationHistory.objects.first()
-            latest_count = 0
+        personal_histories = PersonalEvacuationHistory.objects.filter(shelter=shelter)
+        latest_history = EvacuationHistory.objects.filter(shelter=shelter).order_by('-created_at').first()
+        if latest_history is not None:
+            latest_count = latest_history.count
             latest_date = latest_history.created_at
-        except EvacuationHistory.DoesNotExist:
-            latest_count = 0
-            try:
-                last_history = personal_histories.last()
+        else:
+            last_history = personal_histories.order_by('-created_at').first()
+            if last_history is not None:
                 latest_date = last_history.created_at
-            except PersonalEvacuationHistory.DoesNotExist:
-                latest_date = now
+
         # 前回取得時意向の履歴一覧
         personal_histories = personal_histories.filter(created_at__range=[latest_date, now])
         # 避難した人数

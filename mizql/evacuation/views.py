@@ -53,7 +53,7 @@ class EvacuationHistoryViewSets(mixins.ListModelMixin,
 
     def list(self, request, *args, **kwargs):
         shelter_id = int(kwargs['shelter_pk'])
-        queryset = self.get_queryset().filter(sheler_id=shelter_id)[:10]
+        queryset = self.get_queryset().filter(shelter_id=shelter_id)[:10]
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 

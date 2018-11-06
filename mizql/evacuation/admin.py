@@ -11,6 +11,8 @@ class ShelterAdmin(admin.ModelAdmin):
 class EvacuationHistoryAdmin(admin.ModelAdmin):
     list_display = ('shelter_name', 'count', 'created_at')
 
+    ordering = ['shelter__name']
+
     def shelter_name(self, obj):
         return obj.shelter.name
 
