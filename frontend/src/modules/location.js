@@ -10,3 +10,7 @@ export const getPosition = () => {
     }), e => reject(`エラー(${e.code}): ${e.message}`));
   });
 };
+
+export const canGetPosition = () => {
+  return navigator.geolocation;
+};

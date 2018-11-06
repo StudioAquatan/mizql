@@ -6,8 +6,15 @@ import {
   Typography
 } from '@material-ui/core';
 import {KeyboardArrowDown} from '@material-ui/icons';
-import {BarChart, Bar, ResponsiveContainer} from 'recharts';
+import {
+  BarChart,
+  Bar,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+} from 'recharts';
 import * as mockdata from '../config/mockdata';
+import theme from '../config/theme';
 
 export default class ShelterDetail extends Component {
   constructor(props) {
@@ -20,7 +27,7 @@ export default class ShelterDetail extends Component {
   render() {
     return (
       <React.Fragment>
-        <Button color="inherit" onClick={() => this.props.pickShelter(null)}>
+        <Button color="inherit" onClick={() => this.props.pickShelter(null)} style={{backgroundColor: "#fafafa"}}>
           <KeyboardArrowDown/>
         </Button>
         <Grid container justify="center" style={{padding: "10px"}}>
@@ -28,13 +35,18 @@ export default class ShelterDetail extends Component {
             <Paper style={{padding: "20px", margin: "5px"}}>
               <ResponsiveContainer width='100%' height={300}>
                 <BarChart data={mockdata.evacuees}>
-                  <Bar dataKey="num" fill="#8884d8"/>
+                  <XAxis dataKey="time"/>
+                  <YAxis/>
+                  <Bar dataKey="num" fill={theme.palette.secondary.light}/>
                 </BarChart>
               </ResponsiveContainer>
             </Paper>
           </Grid>
           <Grid item xs={12} lg={6} xl={6}>
-            <Paper style={{padding: "20px", margin: "5px", height: '300px'}}>
+            <Paper
+              justify="center"
+              style={{padding: "20px", margin: "5px", height: '300px'}}
+            >
               <Typography variant="h5">{this.state.shelter.name}</Typography>
               <Typography>{this.state.shelter.distance} m</Typography>
               <Typography>{this.state.shelter.address}</Typography>

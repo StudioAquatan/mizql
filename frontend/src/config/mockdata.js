@@ -37,10 +37,10 @@ export const shelters = [
 ];
 
 export const evacuees = [
-  {name: "12:00", num: 10},
-  {name: "13:00", num: 20},
-  {name: "14:00", num: 50},
-  {name: "15:00", num: 90},
-  {name: "16:00", num: 100},
-  {name: "17:00", num: 115},
+  {time: "12:00", num: 10},
+  {time: "13:00", num: 20},
+  {time: "14:00", num: 50},
+  {time: "15:00", num: 90},
+  {time: "16:00", num: 100},
+  {time: "17:00", num: 115},
 ];

@@ -4,10 +4,11 @@ import {
   AppBar,
   Button,
   Card, CardContent,
+  CircularProgress,
   Drawer,
   Grid,
   Typography,
-  Toolbar
+  Toolbar,
 } from '@material-ui/core';
 import * as location from '../modules/location';
 import * as auth from '../modules/auth';
@@ -23,7 +24,7 @@ export default class Home extends Component {
     super(props);
     this.state = {
       location: null,
-      canUseGeolocation: null,
+      canUseGeolocation: location.canGetPosition(),
       shelters: mockdata.shelters,
       pickShelter: null,
       showDetail: false,
@@ -83,30 +84,32 @@ export default class Home extends Component {
 
         <Grid container justify='center'>
           <Grid item xs={12} md={6}>
-            <Card style={{margin: 10}}>
-              <CardContent style={{padding: 0, textAlign: 'center'}}>
-                {this.state.location ?
-                  <ShelterMap
-                    myPosition={this.state.location}
-                    shelters={this.state.shelters}
-                    pickShelter={this.pickShelter.bind(this)}
-                  />
-                  :
-                  this.state.canUseGeolocation ?
-                    <p>GPSを使用できません</p> :
-                    <p>現在地取得中です...</p>
-                }
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid item xs={12} md={6}>
             <Card style={{margin: 10, height: '400px'}}>
               <CardContent>
                 <Information/>
               </CardContent>
             </Card>
           </Grid>
+
+          {this.state.canUseGeolocation ?
+            <Grid item xs={12} md={6} justify="center">
+              <Card style={{margin: 10, height: '400px'}}>
+                <CardContent style={{padding: 0, textAlign: 'center'}}>
+                  {this.state.location ?
+                      <ShelterMap
+                      myPosition={this.state.location}
+                      shelters={this.state.shelters}
+                      pickShelter={this.pickShelter.bind(this)}
+                      />
+                    :
+                    <CircularProgress color="secondary" style={{margin: '0 auto'}}/>
+                  }
+                </CardContent>
+              </Card>
+            </Grid>
+            :
+            <Typography>GPSを使用できません</Typography>
+          }
 
           <Grid item xs={12}>
             <Card style={{margin: 10}}>
