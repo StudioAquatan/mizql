@@ -102,8 +102,8 @@ export default class Home extends Component {
                       pickShelter={this.pickShelter.bind(this)}
                       />
                     :
-                    <CircularProgress color="secondary" style={{margin: '0 auto'}}/>
-                  }
+                    <CircularProgress color="secondary" style={{marginTop: '180px'}}/>
+                   }
                 </CardContent>
               </Card>
             </Grid>
