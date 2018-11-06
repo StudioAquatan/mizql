@@ -33,11 +33,11 @@ class EvacuationHistorySerializer(serializers.ModelSerializer):
 
 class PersonalEvacuationHistorySerializer(serializers.ModelSerializer):
 
-    shelter_id = serializers.PrimaryKeyRelatedField(read_only=True)
+    shelter = ShelterSerializer(read_only=True, allow_null=True)
 
     class Meta:
         model = PersonalEvacuationHistory
-        fields = ('pk', 'shelter_id', 'is_evacuated')
+        fields = ('pk', 'shelter', 'is_evacuated')
 
     def create(self, validated_data):
         user = self.context['request'].user
