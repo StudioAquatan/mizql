@@ -55,7 +55,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         """ユーザ名を返却"""
-        return self.email
+        return self.username
 
     class Meta:
         ordering = ['-created_at']

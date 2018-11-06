@@ -1,5 +1,7 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 from django.db.models.expressions import RawSQL
+from django.utils import timezone
 
 
 class NearbyShelterManager(models.Manager):
@@ -47,9 +49,79 @@ class Shelter(models.Model):
     address = models.CharField(verbose_name='住所', max_length=255)
     lat = models.FloatField(verbose_name='緯度')
     lon = models.FloatField(verbose_name='経度')
+    capacity = models.IntegerField('収容可能人数', null=True)
 
     objects = NearbyShelterManager()
 
     class Meta:
         unique_together = ('lat', 'lon')
         ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
+class PersonalEvacuationHistory(models.Model):
+    """
+    個人の避難履歴を取る
+    """
+    user = models.ForeignKey(get_user_model(), verbose_name='ユーザ', on_delete=models.CASCADE,
+                             related_name='evacuation_histories')
+    shelter = models.ForeignKey(Shelter, verbose_name='避難所', on_delete=models.CASCADE,
+                                related_name='personal_histories')
+    created_at = models.DateTimeField('日付')
+    is_evacuated = models.BooleanField(verbose_name='避難しているか')
+
+    class Meta:
+        ordering = ['-created_at']
+
+
+class EvacuationHistoryManager(models.Manager):
+
+    def create(self, shelter: Shelter, now=None):
+        """
+        10分前から現在までの避難人数を取得
+        :param shelter:
+        :param now: 時刻
+        :return:
+        """
+        if now is None:
+            now = timezone.now()
+        latest_date = now
+        latest_count = 0
+        # 最新の履歴から人数を取得
+        personal_histories = PersonalEvacuationHistory.objects.filter(shelter=shelter)
+        latest_history = EvacuationHistory.objects.filter(shelter=shelter).order_by('-created_at').first()
+        if latest_history is not None:
+            latest_count = latest_history.count
+            latest_date = latest_history.created_at
+        else:
+            last_history = personal_histories.order_by('-created_at').first()
+            if last_history is not None:
+                latest_date = last_history.created_at
+
+        # 前回取得時意向の履歴一覧
+        personal_histories = personal_histories.filter(created_at__range=[latest_date, now])
+        # 避難した人数
+        at_shelter_count = personal_histories.filter(is_evacuated=True).count()
+        # 帰宅した人数
+        at_home_count = personal_histories.filter(is_evacuated=False).count()
+        # 現在避難所に居る人数
+        current_count = latest_count + at_shelter_count - at_home_count
+        hist = self.model(shelter=shelter, count=current_count, created_at=now)
+        hist.save()
+        return hist
+
+
+class EvacuationHistory(models.Model):
+    """
+    避難人数の履歴を取る
+    """
+    shelter = models.ForeignKey(Shelter, verbose_name='避難所', related_name='histories', on_delete=models.CASCADE)
+    count = models.IntegerField('避難している人数')
+    created_at = models.DateTimeField('取得日')
+
+    objects = EvacuationHistoryManager()
+
+    class Meta:
+        ordering = ['-created_at']
