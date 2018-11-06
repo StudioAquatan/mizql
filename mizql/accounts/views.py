@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
-from rest_framework import viewsets, mixins, permissions
+from rest_framework import viewsets, mixins, permissions, generics
 from . import models, serializers, permissions as custom_permissions
 from .forms import LoginForm
 
@@ -38,3 +38,11 @@ class UserViewSets(mixins.RetrieveModelMixin,
         if self.action == 'create':
             return serializers.CreateUserSerializer
         return serializers.UserSerializer
+
+
+class MeView(generics.RetrieveAPIView):
+    serializer_class = serializers.UserSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self):
+        return self.request.user
