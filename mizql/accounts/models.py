@@ -48,6 +48,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField('登録日時', auto_now_add=True)
     updated_at = models.DateTimeField('更新日時', auto_now=True)
+    follows = models.ManyToManyField('User', related_name='followed')
 
     USERNAME_FIELD = 'username'
 
