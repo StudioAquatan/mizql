@@ -83,17 +83,13 @@ export default class Home extends Component {
         </AppBar>
 
         <Grid container justify='center'>
-          <Grid item xs={12}>
-            <Card style={{margin: 10}}>
-              <CardContent>
-                <Dashboard/>
-              </CardContent>
-            </Card>
+          <Grid item xs={12} style={{margin: 10}}>
+            <Dashboard/>
           </Grid>
 
           {this.state.canUseGeolocation ?
             <Grid item xs={12} md={6}>
-              <Card style={{margin: 10, height: theme.googleMap.height}}>
+              <Card style={{margin: 10, marginTop: 0, height: theme.googleMap.height}}>
                 <CardContent style={{padding: 0, textAlign: 'center'}}>
                   {this.state.location ?
                     <ShelterMap
@@ -112,7 +108,7 @@ export default class Home extends Component {
           }
 
           <Grid item xs={12} md={6}>
-            <Card style={{margin: 10}}>
+            <Card style={{margin: 10, marginTop: 0}}>
               <CardContent style={{padding: 0, textAlign: 'center'}}>
                 <ShelterList shelters={this.state.shelters} pickShelter={this.pickShelter.bind(this)}/>
               </CardContent>

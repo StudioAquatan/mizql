@@ -3,11 +3,11 @@ import {
   Grid,
   Paper,
   Tabs, Tab,
-  Table, TableBody, TableCell, TableHead, TableFooter, TableSortLabel, TablePagination, TableRow
+  List, ListItem, ListItemIcon, ListItemText, ListSubheader
 } from '@material-ui/core';
+import * as icons from '@material-ui/icons';
 import * as mockdata from '../config/mockdata';
 import * as auth from '../modules/auth';
-import * as util from '../modules/util';
 
 export default class Dashboard extends Component {
   constructor(props) {
@@ -40,22 +40,17 @@ export default class Dashboard extends Component {
         {this.state.tab === 0 &&
         <Grid container justify='center' style={{padding: 10}}>
           <Grid item xs={12} md={6} lg={6} xl={6}>
-            <Table style={{minWidth: 600}}>
-              <TableHead>
-                <TableRow>
-                  <TableCell>発令事項</TableCell>
-                  <TableCell>発令時間</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {mockdata.area.alarms.map((alarm, key) => (
-                  <TableRow key={key}>
-                    <TableCell>{alarm.name}</TableCell>
-                    <TableCell>{util.parseDateStr(alarm.created_at)}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <List
+              subheader={<ListSubheader component="div">発令中の警報・注意報</ListSubheader>}
+            >
+              {mockdata.area.alarms.map((alarm, key) => (
+                <ListItem key={key}>
+                  {alarm.type === 0 && <ListItemIcon><icons.Warning style={{color: "#D7DF01"}}/></ListItemIcon>}
+                  {alarm.type === 1 && <ListItemIcon><icons.Error style={{color: "#DF0101"}}/></ListItemIcon>}
+                  <ListItemText primary={alarm.name}/>
+                </ListItem>
+              ))}
+            </List>
           </Grid>
           <Grid item xs={12} md={6} lg={6} xl={6}>
             <p>危険度</p>

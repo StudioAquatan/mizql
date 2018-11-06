@@ -52,36 +52,42 @@ export const area = {
     {
       pk: 6,
       code: 19,
+      type: 0,
       name: "高潮注意報",
       created_at: "2018-11-06T17:37:42.563175+09:00"
     },
     {
       pk: 5,
       code: 16,
+      type: 0,
       name: "波浪注意報",
       created_at: "2018-11-06T17:37:42.550208+09:00"
     },
     {
       pk: 4,
       code: 14,
+      type: 1,
       name: "雷注意報",
       created_at: "2018-11-06T17:37:42.544564+09:00"
     },
     {
       pk: 3,
       code: 5,
+      type: 1,
       name: "暴風警報",
       created_at: "2018-11-06T17:37:42.538144+09:00"
     },
     {
       pk: 2,
       code: 4,
+      type: 1,
       name: "洪水警報",
       created_at: "2018-11-06T17:37:42.528560+09:00"
     },
     {
       pk: 1,
       code: 3,
+      type: 1,
       name: "大雨警報",
       created_at: "2018-11-06T17:37:42.516061+09:00"
     }
