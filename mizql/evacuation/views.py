@@ -1,12 +1,12 @@
 import coreapi
 import coreschema
-from rest_framework import viewsets, permissions, schemas
-from .models import Shelter
-from .serializers import ShelterSerializer
+from rest_framework import viewsets, permissions, schemas, mixins, status
+from rest_framework.response import Response
+from .models import Shelter, EvacuationHistory, PersonalEvacuationHistory
+from .serializers import ShelterSerializer, EvacuationHistorySerializer, PersonalEvacuationHistorySerializer
 
 
 class ShelterViewSets(viewsets.ReadOnlyModelViewSet):
-
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = ShelterSerializer
     schema = schemas.AutoSchema(
@@ -40,6 +40,34 @@ class ShelterViewSets(viewsets.ReadOnlyModelViewSet):
         if lat and lon:
             lat = float(lat)
             lon = float(lon)
-            return Shelter.objects.get_nearby_shelters_list(lat, lon, distance)\
+            return Shelter.objects.get_nearby_shelters_list(lat, lon, distance) \
                 .order_by('distance').all()
         return Shelter.objects.all()
+
+
+class EvacuationHistoryViewSets(mixins.ListModelMixin,
+                                mixins.CreateModelMixin,
+                                viewsets.GenericViewSet):
+    queryset = EvacuationHistory.objects.all()
+    serializer_class = EvacuationHistorySerializer
+
+    def list(self, request, *args, **kwargs):
+        shelter_id = int(kwargs['shelter_pk'])
+        queryset = self.get_queryset().filter(sheler_id=shelter_id)[:10]
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class EvacuationViewSets(mixins.CreateModelMixin,
+                         viewsets.GenericViewSet):
+    queryset = PersonalEvacuationHistory.objects.all()
+    serializer_class = PersonalEvacuationHistorySerializer
+
+    def create(self, request, *args, **kwargs):
+        shelter_id = int(kwargs['shelter_pk'])
+        data = request.data
+        data['shelter_id'] = shelter_id
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
