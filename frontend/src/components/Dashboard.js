@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-export default class Information extends Component{
+export default class Dashboard extends Component{
   render(){
     return(
       <React.Fragment>

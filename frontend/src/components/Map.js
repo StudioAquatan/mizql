@@ -2,12 +2,13 @@ import React from 'react';
 import {compose, withProps} from 'recompose';
 import {GoogleMap, Marker, withGoogleMap, withScriptjs} from 'react-google-maps';
 import UserPoint from '../UserMapPoint.svg';
+import theme from '../config/theme';
 
 const ShelterMap = compose(
   withProps({
     googleMapURL: `https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${process.env.REACT_APP_GOOGLE_MAP}`,
     loadingElement: <div style={{height: `100%`}}/>,
-    containerElement: <div style={{height: `400px`}}/>,
+    containerElement: <div style={{height: theme.googleMap.height}}/>,
     mapElement: <div style={{height: `100%`}}/>,
   }),
   withScriptjs,

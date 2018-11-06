@@ -18,6 +18,9 @@ const theme = createMuiTheme({
       contrastText: '#fff',
     },
   },
+  googleMap: {
+    height: '500px',
+  },
 });
 
 export default theme;
