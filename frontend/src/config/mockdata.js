@@ -1,4 +1,4 @@
-export const mockShelters = [
+export const shelters = [
   {
     "name": "京都工芸繊維大学",
     "address": "京都府京都市左京区松ヶ崎橋上町",

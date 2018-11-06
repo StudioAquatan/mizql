@@ -3,7 +3,7 @@ import {compose, withProps} from 'recompose';
 import {GoogleMap, Marker, withGoogleMap, withScriptjs} from 'react-google-maps';
 import UserPoint from '../UserMapPoint.svg';
 
-export const MapComponent = compose(
+const ShelterMap = compose(
   withProps({
     googleMapURL: `https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${process.env.REACT_APP_GOOGLE_MAP}`,
     loadingElement: <div style={{height: `100%`}}/>,
@@ -39,3 +39,5 @@ export const MapComponent = compose(
     }
   </GoogleMap>
 ));
+
+export default ShelterMap;

@@ -1,4 +1,4 @@
-export const GetPosition = () => {
+export const getPosition = () => {
   return new Promise((resolve, reject) => {
     if(!navigator.geolocation) {
       reject("このブラウザは現在地の取得に対応していません:(");
