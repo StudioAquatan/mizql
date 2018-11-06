@@ -16,16 +16,20 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
-from rest_framework.routers import DefaultRouter
+from rest_framework_nested.routers import DefaultRouter, NestedDefaultRouter
 from rest_framework_swagger.views import get_swagger_view
 
 from accounts.views import UserViewSets
-from evacuation.views import ShelterViewSets
+from evacuation.views import ShelterViewSets, EvacuationHistoryViewSets, EvacuationViewSets
 from disaster.views import LocationView, DemoLocationView
 
 router = DefaultRouter()
 router.register(r'users', UserViewSets, basename='users')
 router.register(r'shelters', ShelterViewSets, basename='shelters')
+
+shelter_nested_router = NestedDefaultRouter(router, 'shelters', lookup='shelter')
+shelter_nested_router.register(r'history', EvacuationHistoryViewSets, basename='history')
+shelter_nested_router.register(r'evacuate', EvacuationViewSets, basename='evacuate')
 
 if not settings.DEBUG:
     url = '/api/'
@@ -36,6 +40,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('_/', include('accounts.urls')),
     path('', include(router.urls)),
+    path('', include(shelter_nested_router.urls)),
     path('area/', LocationView.as_view()),
     path('demo-area/', DemoLocationView.as_view()),
     path('auth/', include('djoser.urls.jwt')),
