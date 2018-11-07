@@ -15,7 +15,7 @@ class ShelterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Shelter
-        fields = ('name', 'address', 'lat', 'lon')
+        fields = ('name', 'address', 'lat', 'lon', 'capacity')
 
     def to_representation(self, instance):
         data = super(ShelterSerializer, self).to_representation(instance)

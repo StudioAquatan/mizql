@@ -5,6 +5,7 @@ from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.schemas import ManualSchema
 
+from .models import DemoLocation, DemoAlarm
 from .serializers import LocationSerializer, DemoLocationSerializer
 from .info import DisasterReport
 
@@ -46,15 +47,15 @@ class DemoLocationView(generics.RetrieveAPIView):
     schema = ManualSchema([
         coreapi.Field(
             'lat', required=True, location='query', schema=coreschema.String(description='latitude'),
-            example='35.048900', description='緯度'
+            description='35.048900'
         ),
         coreapi.Field(
             'lon', required=True, location='query', schema=coreschema.String(description='longitude'),
-            example='135.780418', description='経度'
+            description='135.780418'
         ),
         coreapi.Field(
             'date', required=False, location='query', schema=coreschema.String(description='%Y-%m-%d_%H:%M%S'),
-            description='%Y-%m-%d_%H:%M%S', example='2018-09-04_12:00:00'
+            description='2018-09-04_12:00:00'
         )
     ])
 
@@ -66,6 +67,8 @@ class DemoLocationView(generics.RetrieveAPIView):
         if lat is None or lon is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
         reporter = DisasterReport(lat, lon)
+        reporter.location_class = DemoLocation
+        reporter.alarm_class = DemoAlarm
         if d_str is None:
             d_str = '2018-09-04_12:00:00'
         loc = reporter.get_area_info(datetime.strptime(d_str, "%Y-%m-%d_%H:%M:%S"))
