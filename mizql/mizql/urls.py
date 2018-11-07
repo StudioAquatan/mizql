@@ -19,7 +19,7 @@ from django.conf import settings
 from rest_framework_nested.routers import DefaultRouter, NestedDefaultRouter
 from rest_framework_swagger.views import get_swagger_view
 
-from accounts.views import UserViewSets
+from accounts.views import UserViewSets, MeView
 from evacuation.views import ShelterViewSets, EvacuationHistoryViewSets, EvacuationViewSets
 from disaster.views import LocationView, DemoLocationView
 
@@ -39,6 +39,7 @@ else:
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('_/', include('accounts.urls')),
+    path('users/me/', MeView.as_view()),
     path('', include(router.urls)),
     path('', include(shelter_nested_router.urls)),
     path('area/', LocationView.as_view()),
