@@ -39,6 +39,12 @@ class PersonalEvacuationHistorySerializer(serializers.ModelSerializer):
         model = PersonalEvacuationHistory
         fields = ('pk', 'shelter', 'is_evacuated')
 
+    def to_internal_value(self, data):
+        return {
+            'is_evacuated': data['is_evacuated'],
+            'shelter_id': data['shelter_id'],
+        }
+
     def create(self, validated_data):
         shelter_id = validated_data['shelter_id']
         is_evacuated = validated_data['is_evacuated']

@@ -78,5 +78,6 @@ class EvacuationViewSets(mixins.CreateModelMixin,
         data['shelter_id'] = shelter_id
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
+        serializer.save()
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
