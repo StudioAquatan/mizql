@@ -11,7 +11,7 @@ class DisasterReport(object):
     base_url = 'http://api.aitc.jp/jmardb-api/'
     area_path = 'area'
     search_path = 'search'
-    datetime_format = '%Y-%m-%d %H:%M:%S'
+    datetime_format = '%Y-%m-%d %H:%M:%S%z'
     datetime_parse_format = '%Y-%m-%dT%H:%M:%S.%f%z'
     demo_coordinates = (135.780418, 35.048900)
     location_class = Location
@@ -114,14 +114,14 @@ class RainReporter(object):
     API_KEY = settings.YOLP_APP_ID
     base_url = 'https://map.yahooapis.jp/weather/V1/place'
     forecast_key = 'forecast'
-    datetime_format = '%Y%m%d%H%M'
+    datetime_format = '%Y%m%d%H%M%z'
 
     def __init__(self, lat: str, lon: str):
         self.lat = lat
         self.lon = lon
 
     def _make(self, w):
-        created_at = datetime.strptime(w['Date'], self.datetime_format).astimezone(timezone.get_default_timezone())
+        created_at = datetime.strptime(str(w['Date']) + '+0900', self.datetime_format)
         amount = w['Rainfall'] if 'Rainfall' in w.keys() else 0.0
         return {
             'created_at': created_at,
@@ -135,7 +135,7 @@ class RainReporter(object):
 
     def get_report(self, location):
         payload = {
-            'coordinates': self.lat + ',' + self.lon,
+            'coordinates': self.lon + ',' + self.lat,
             'appid': self.API_KEY,
             'past': 1,
             'output': 'json'

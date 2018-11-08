@@ -72,8 +72,10 @@ class DemoLocationView(generics.RetrieveAPIView):
         reporter.location_class = DemoLocation
         reporter.alarm_class = DemoAlarm
         if d_str is None:
-            d_str = '2018-09-04_12:00:00'
-        loc = reporter.get_area_info(datetime.strptime(d_str, "%Y-%m-%d_%H:%M:%S"))
+            d_str = '2018-09-04_12:00:00+0900'
+        else:
+            d_str = d_str + '+0900'
+        loc = reporter.get_area_info(datetime.strptime(d_str, "%Y-%m-%d_%H:%M:%S%z"))
         if loc is None:
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         return loc

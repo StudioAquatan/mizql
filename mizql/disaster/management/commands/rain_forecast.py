@@ -1,8 +1,6 @@
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta
 from django.core.management.base import BaseCommand
 from disaster.models import DemoLocation, DemoRainForecast
-
-JST = timezone(timedelta(hours=+9), 'JST')
 
 
 class Command(BaseCommand):
@@ -16,7 +14,7 @@ class Command(BaseCommand):
                 0.5, 0.5, 0.5, 0.5, 0.5, 1.0, 0.0, 1.0, 3.5, 7.5, 8.0, 8.5, 5.0, 7.0, 3.5, 4.5
             ]
         }
-        date = datetime.strptime('2018/09/04 12:00:00', '%Y/%m/%d %H:%M:%S').astimezone(JST)
+        date = datetime.strptime('2018/09/04 12:00:00+0900', '%Y/%m/%d %H:%M:%S%z')
         for area in areas:
             forecast = rain_forecasts[area['name']]
             loc, _ = DemoLocation.objects.get_or_create(
