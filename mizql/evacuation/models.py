@@ -119,6 +119,7 @@ class EvacuationHistory(models.Model):
     """
     shelter = models.ForeignKey(Shelter, verbose_name='避難所', related_name='histories', on_delete=models.CASCADE)
     count = models.IntegerField('避難している人数')
+    is_demo = models.BooleanField('デモ用', default=True)
     created_at = models.DateTimeField('取得日')
 
     objects = EvacuationHistoryManager()
