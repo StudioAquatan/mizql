@@ -92,6 +92,61 @@ export const area = {
       created_at: "2018-11-06T17:37:42.516061+09:00"
     }
   ],
+  rain: {
+    forecasts: [
+      {
+        amount: 20,
+        created_at: "2018-11-08T17:25:00Z"
+      },
+      {
+        amount: 50,
+        created_at: "2018-11-08T17:15:00Z"
+      },
+      {
+        amount: 60,
+        created_at: "2018-11-08T17:05:00Z"
+      },
+      {
+        amount: 40,
+        created_at: "2018-11-08T16:55:00Z"
+      },
+      {
+        amount: 20,
+        created_at: "2018-11-08T16:45:00Z"
+      },
+      {
+        amount: 40,
+        created_at: "2018-11-08T16:35:00Z"
+      }
+    ],
+    observations: [
+      {
+        amount: 20,
+        created_at: "2018-11-08T16:25:00Z"
+      },
+      {
+        amount: 30,
+        created_at: "2018-11-08T16:15:00Z"
+      },
+      {
+        amount: 20,
+        created_at: "2018-11-08T16:05:00Z"
+      },
+      {
+        amount: 10,
+        created_at: "2018-11-08T15:55:00Z"
+      },
+      {
+        amount: 0,
+        created_at: "2018-11-08T15:45:00Z"
+      },
+      {
+        amount: 10,
+        created_at: "2018-11-08T15:35:00Z"
+      },
+    ],
+  },
+  score: 3,
   updated_at: "2018-11-06T17:37:41.925413+09:00"
 };
 
