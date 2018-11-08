@@ -10,6 +10,8 @@ import theme from '../config/theme';
 import * as icons from '@material-ui/icons';
 import * as mockdata from '../config/mockdata';
 import * as auth from '../modules/auth';
+import Precipitation from './Precipitation';
+import DangerScore from './DangerScore';
 
 export default class Dashboard extends Component {
   constructor(props) {
@@ -45,10 +47,10 @@ export default class Dashboard extends Component {
         </Paper>
 
         {this.state.tab === 0 &&
-        <Grid container justify='center' style={{padding: 10}}>
+        <Grid container justify='center' style={{padding: 10}} spacing={8}>
           {this.props.canUseLocation ?
             <React.Fragment>
-              <Grid item xs={12} md={6} lg={6} xl={6}>
+              <Grid item xs={12} md={4} lg={4} xl={4}>
                 <List
                   subheader={<ListSubheader component="div">発令中の警報・注意報</ListSubheader>}
                 >
@@ -65,9 +67,11 @@ export default class Dashboard extends Component {
                   ))}
                 </List>
               </Grid>
-              <Grid item xs={12} md={6} lg={6} xl={6}>
-                <p>危険度</p>
-                <p>TODO: 何かのグラフ</p>
+              <Grid item xs={12} md={4} lg={4} xl={4}>
+                <Precipitation/>
+              </Grid>
+              <Grid item xs={12} md={4} lg={4} xl={4}>
+                <DangerScore score={mockdata.area.score}/>
               </Grid>
             </React.Fragment>
             :
