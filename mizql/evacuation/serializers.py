@@ -35,7 +35,8 @@ class EvacuationHistoryListSerializer(serializers.ListSerializer):
         current = PersonalEvacuationHistory.objects.filter(shelter=shelter, created_at__gt=latest).all()
         stay = current.filter(is_evacuated=True).all().count()
         gohome = current.filter(is_evacuated=False).all().count()
-        resp.insert(0, {'created_at': timezone.now(), 'count': stay - gohome + previous_count})
+        d_f = serializers.DateTimeField()
+        resp.insert(0, {'created_at': d_f.to_representation(timezone.now()), 'count': stay - gohome + previous_count})
         return resp
 
 
@@ -56,8 +57,9 @@ class DemoEvacuationHistoryListSerializer(EvacuationHistoryListSerializer):
         latest = current - timedelta(
             minutes=current.minute % 10, seconds=current.second, microseconds=current.microsecond
         )
+        d_f = serializers.DateTimeField()
         for i in range(1, len(data)-1):
-            data[i]['created_at'] = latest - timedelta(minutes=10*(i-1))
+            data[i]['created_at'] = d_f.to_representation(latest - timedelta(minutes=10*(i-1)))
         return data
 
 
@@ -96,6 +98,7 @@ class PersonalEvacuationHistorySerializer(serializers.ModelSerializer):
                 e.is_evacuated = False
                 e.save()
             return evacuated[0]
+        now = timezone.now().astimezone(timezone.get_default_timezone())
         return PersonalEvacuationHistory.objects.create(
-            shelter_id=shelter_id, user=user, is_evacuated=is_evacuated, created_at=timezone.now()
+            shelter_id=shelter_id, user=user, is_evacuated=is_evacuated, created_at=now
         )

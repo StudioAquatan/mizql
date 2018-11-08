@@ -2,7 +2,6 @@ import coreapi
 import coreschema
 from datetime import timedelta, datetime
 from django.utils import timezone
-from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, permissions, schemas, mixins, status
 from rest_framework.response import Response
 from .models import Shelter, EvacuationHistory, PersonalEvacuationHistory
@@ -72,7 +71,7 @@ class EvacuationHistoryViewSets(mixins.ListModelMixin,
 
     def list(self, request, *args, **kwargs):
         shelter_id = int(kwargs['shelter_pk'])
-        now = timezone.now()
+        now = timezone.now().astimezone(timezone.get_default_timezone())
         since = now - timedelta(minutes=10*10)
         queryset = self.get_queryset().filter(
             shelter_id=shelter_id, is_demo=False, created_at__gte=since
