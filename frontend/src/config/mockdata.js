@@ -128,4 +128,36 @@ export const friends = [
     refuged: false,
     shelter: null,
   },
+  {
+    username: "A子",
+    refuged: false,
+    shelter: null,
+  },
+  {
+    username: "B助",
+    refuged: true,
+    shelter: {
+      name: "京都ノートルダム女子大学",
+      address: "京都府京都市左京区下鴨南野々神町1",
+      lat: 35.05070445,
+      lon: 135.7723571,
+      distance: 970.0
+    },
+  },
+  {
+    username: "C雄",
+    refuged: true,
+    shelter: {
+      name: "京都市立修学院中学校",
+      address: "京都府京都市左京区一乗寺御祭田町2",
+      lat: 35.04245594,
+      lon: 135.7885355,
+      distance: 990.0
+    }
+  },
+  {
+    username: "工繊　太郎",
+    refuged: false,
+    shelter: null,
+  },
 ];

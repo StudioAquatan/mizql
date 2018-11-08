@@ -21,6 +21,9 @@ const theme = createMuiTheme({
   googleMap: {
     height: '500px',
   },
+  friendList: {
+    rowPerPage: 5,
+  },
 });
 
 export default theme;

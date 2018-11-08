@@ -4,8 +4,9 @@ import {
   Paper,
   Tabs, Tab,
   List, ListItem, ListItemIcon, ListItemText, ListSubheader,
-  Table, TableBody, TableCell, TableHead, TableRow
+  Table, TableBody, TableCell, TableHead, TableRow, TablePagination, TableFooter
 } from '@material-ui/core';
+import theme from '../config/theme';
 import * as icons from '@material-ui/icons';
 import * as mockdata from '../config/mockdata';
 import * as auth from '../modules/auth';
@@ -15,11 +16,16 @@ export default class Dashboard extends Component {
     super(props);
     this.state = {
       tab: 0,
+      friendPage: 0,
     }
   }
 
   handleTabChange(e, v) {
     this.setState({tab: v});
+  }
+
+  handleChangePage(e, p) {
+    this.setState({friendPage: p});
   }
 
   render() {
@@ -81,7 +87,7 @@ export default class Dashboard extends Component {
               </TableRow>
             </TableHead>
             <TableBody>
-              {mockdata.friends.map((friend, key) => (
+              {mockdata.friends.slice(this.state.friendPage * theme.friendList.rowPerPage, this.state.friendPage * theme.friendList.rowPerPage + theme.friendList.rowPerPage).map((friend, key) => (
                 <TableRow key={key}>
                   <TableCell>{friend.username}</TableCell>
                   <TableCell>{friend.refuged ? "避難済み" : "-"}</TableCell>
@@ -90,6 +96,17 @@ export default class Dashboard extends Component {
                 </TableRow>
               ))}
             </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  count={mockdata.friends.length}
+                  onChangePage={this.handleChangePage.bind(this)}
+                  page={this.state.friendPage}
+                  rowsPerPage={5}
+                  rowsPerPageOptions={[5]}
+                />
+              </TableRow>
+            </TableFooter>
           </Table>
         </div>
         }
