@@ -5,7 +5,12 @@ from django.utils import timezone
 from rest_framework import viewsets, permissions, schemas, mixins, status
 from rest_framework.response import Response
 from .models import Shelter, EvacuationHistory, PersonalEvacuationHistory
-from .serializers import ShelterSerializer, EvacuationHistorySerializer, PersonalEvacuationHistorySerializer
+from .serializers import (
+    ShelterSerializer,
+    EvacuationHistorySerializer,
+    PersonalEvacuationHistorySerializer,
+    DemoEvacuationHistorySerializer,
+)
 
 
 class ShelterViewSets(viewsets.ReadOnlyModelViewSet):
@@ -102,6 +107,7 @@ class EvacuationHistoryViewSets(mixins.ListModelMixin,
 
 
 class DemoEvacuationHistoryViewSets(EvacuationHistoryViewSets):
+    serializer_class = DemoEvacuationHistorySerializer
 
     def list(self, request, *args, **kwargs):
         shelter_id = int(kwargs['shelter_pk'])

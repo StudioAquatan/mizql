@@ -53,12 +53,12 @@ class DemoEvacuationHistoryListSerializer(EvacuationHistoryListSerializer):
     def to_representation(self, instances):
         # デモ用に突っ込んだ時間のデータを現在の時間に置換
         data = super(DemoEvacuationHistoryListSerializer, self).to_representation(instances)
-        current = data[0]['created_at']
+        current = timezone.now()
         latest = current - timedelta(
             minutes=current.minute % 10, seconds=current.second, microseconds=current.microsecond
         )
         d_f = serializers.DateTimeField()
-        for i in range(1, len(data)-1):
+        for i in range(1, len(data)):
             data[i]['created_at'] = d_f.to_representation(latest - timedelta(minutes=10*(i-1)))
         return data
 
