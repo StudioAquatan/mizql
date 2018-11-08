@@ -1,9 +1,10 @@
 import requests
 from datetime import datetime, timedelta
 from django.utils import timezone
+from django.conf import settings
 from typing import Optional, List
 
-from .models import Location, Alarm
+from .models import Location, Alarm, RainForecast
 
 
 class DisasterReport(object):
@@ -107,3 +108,45 @@ class DisasterReport(object):
             for detail in details:
                 self.update_alarm(loc.pk, **detail)
         return loc
+
+
+class RainReporter(object):
+    API_KEY = settings.YOLP_APP_ID
+    base_url = 'https://map.yahooapis.jp/weather/V1/place'
+    forecast_key = 'forecast'
+    datetime_format = '%Y%m%d%H%M'
+
+    def __init__(self, lat: str, lon: str):
+        self.lat = lat
+        self.lon = lon
+
+    def _make(self, w):
+        created_at = datetime.strptime(w['Date'], self.datetime_format).astimezone(timezone.get_default_timezone())
+        amount = w['Rainfall'] if 'Rainfall' in w.keys() else 0.0
+        return {
+            'created_at': created_at,
+            'amount': amount,
+        }
+
+    def _is_observed(self, w):
+        if w['Type'] == self.forecast_key:
+            return False
+        return True
+
+    def get_report(self, location):
+        payload = {
+            'coordinates': self.lat + ',' + self.lon,
+            'appid': self.API_KEY,
+            'past': 1,
+            'output': 'json'
+        }
+        res = requests.get(self.base_url, params=payload)
+        if res.status_code != 200:
+            return None
+        weathers = res.json()['Feature'][0]['Property']['WeatherList']['Weather']
+        for w in weathers:
+            info = self._make(w)
+            r, _ = RainForecast.objects.update_or_create(
+                created_at=info['created_at'], location=location,
+                defaults={'amount': info['amount'], 'is_observed': self._is_observed(w)}
+            )
