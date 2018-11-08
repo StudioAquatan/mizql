@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Location, Alarm, DemoLocation, DemoAlarm, DemoRainForecast
+from .models import Location, Alarm, DemoLocation, DemoAlarm, DemoRainForecast, RainForecast
 
 
 class AlarmSerializer(serializers.ModelSerializer):
@@ -37,16 +37,41 @@ class DemoRainSerializer(serializers.ModelSerializer):
         list_serializer_class = ListDemoRainSerializer
 
 
+class ListRainSerializer(serializers.ListSerializer):
+
+    def to_representation(self, instance):
+        all_data = instance.order_by('-created_at').all()
+        forecasts = all_data.filter(is_observed=False)[:6]
+        observations = all_data.filter(is_observed=True)[:6]
+        return {
+            'forecasts': [
+                {'amount': f.amount, 'created_at': f.created_at} for f in forecasts
+            ],
+            'observations': [
+                {'amount': o.amount, 'created_at': o.created_at} for o in observations
+            ]
+        }
+
+
+class RainSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = RainForecast
+        fields = ('amount', 'is_observed', 'created_at')
+        list_serializer_class = ListRainSerializer
+
+
 class LocationSerializer(serializers.ModelSerializer):
     """
     地域情報のシリアライザ
     """
 
     alarms = AlarmSerializer(read_only=True, allow_null=True, many=True)
+    rain = RainSerializer(read_only=True, allow_null=True, many=True)
 
     class Meta:
         model = Location
-        fields = ('pk', 'name', 'alarms', 'updated_at')
+        fields = ('pk', 'name', 'alarms', 'rain', 'updated_at')
 
 
 class DemoAlarmSerializer(serializers.ModelSerializer):
