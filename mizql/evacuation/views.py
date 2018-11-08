@@ -25,9 +25,10 @@ class ShelterViewSets(viewsets.ReadOnlyModelViewSet):
             ),
             coreapi.Field(
                 'distance',
-                required=True,
+                required=False,
                 location='query',
                 schema=coreschema.Integer(description='radius'),
+                description='Default is 1000'
             ),
         ]
     )
@@ -40,8 +41,10 @@ class ShelterViewSets(viewsets.ReadOnlyModelViewSet):
         if lat and lon:
             lat = float(lat)
             lon = float(lon)
-            return Shelter.objects.get_nearby_shelters_list(lat, lon, distance) \
-                .order_by('distance').all()
+            if self.action == 'list':
+                return Shelter.objects.get_nearby_shelters_list(lat, lon, distance) \
+                    .order_by('distance').all()
+            return Shelter.objects.with_distance(lat, lon).all()
         return Shelter.objects.all()
 
 
