@@ -5,8 +5,6 @@ from tqdm import tqdm
 from accounts.models import User
 from evacuation.models import Shelter, EvacuationHistory, PersonalEvacuationHistory
 
-JST = timezone(timedelta(hours=+9), 'JST')
-
 random.seed(0)
 
 
@@ -27,7 +25,7 @@ class Command(BaseCommand):
         all_shelters = list(Shelter.objects.all())
         all_users = list(User.objects.all())
         for shelter in tqdm(all_shelters, desc='Shelters'):
-            date = datetime.strptime(options['date'], '%Y/%m/%d %H:%M:%S').astimezone(JST)
+            date = datetime.strptime(options['date'] + '+0900', '%Y/%m/%d %H:%M:%S%z')
             limit = reverse_random(shelter.capacity // 10)
             capacity = limit + shelter.capacity
             offset = int(shelter.capacity * random.uniform(0.0, 0.2))
@@ -42,7 +40,7 @@ class Command(BaseCommand):
                 EvacuationHistory(shelter=shelter, count=current, created_at=date).save()
                 count += 1
         for user in tqdm(all_users, 'Users'):
-            date = datetime.strptime(options['date'], '%Y/%m/%d %H:%M:%S').astimezone(JST) + timedelta(minutes=10 * 10)
+            date = datetime.strptime(options['date'] + '0900', '%Y/%m/%d %H:%M:%S%z') + timedelta(minutes=10 * 10)
             is_evacuated = True if 0.8 > random.random() else False
             shelter = random.choice(all_shelters)
             PersonalEvacuationHistory.objects.create(

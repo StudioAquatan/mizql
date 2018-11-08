@@ -7,7 +7,7 @@ from disaster.models import DemoAlarm, DemoLocation
 
 class Command(BaseCommand):
 
-    date_format = '%Y/%m/%d_%H:%M:%S'
+    date_format = '%Y/%m/%d_%H:%M:%S%z'
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -36,7 +36,7 @@ class Command(BaseCommand):
         if raw_date is None:
             date = datetime.now()
         else:
-            date = datetime.strptime(raw_date, self.date_format)
+            date = datetime.strptime(raw_date + '+0900', self.date_format)
         if is_demo:
             reporter.location_class = DemoLocation
             reporter.alarm_class = DemoAlarm
