@@ -7,7 +7,7 @@ from rest_framework.schemas import ManualSchema
 
 from .models import DemoLocation, DemoAlarm
 from .serializers import LocationSerializer, DemoLocationSerializer
-from .info import DisasterReport
+from .info import DisasterReport, RainReporter
 
 
 class LocationView(generics.RetrieveAPIView):
@@ -35,6 +35,8 @@ class LocationView(generics.RetrieveAPIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         reporter = DisasterReport(lat, lon)
         loc = reporter.get_area_info()
+        rain_reporter = RainReporter(lat, lon)
+        rain_reporter.get_report(loc)
         return loc
 
 
