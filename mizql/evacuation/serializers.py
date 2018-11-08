@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django.utils import timezone
 from rest_framework import serializers
 from .models import Shelter, EvacuationHistory, PersonalEvacuationHistory
@@ -24,11 +25,48 @@ class ShelterSerializer(serializers.ModelSerializer):
         return data
 
 
+class EvacuationHistoryListSerializer(serializers.ListSerializer):
+
+    def to_representation(self, instances):
+        resp = [self.child.to_representation(instance) for instance in instances]
+        latest = instances[0].created_at
+        shelter = instances[0].shelter
+        previous_count = instances[0].count
+        current = PersonalEvacuationHistory.objects.filter(shelter=shelter, created_at__gt=latest).all()
+        stay = current.filter(is_evacuated=True).all().count()
+        gohome = current.filter(is_evacuated=False).all().count()
+        resp.insert(0, {'created_at': timezone.now(), 'count': stay - gohome + previous_count})
+        return resp
+
+
 class EvacuationHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EvacuationHistory
         fields = ('created_at', 'count')
+        list_serializer_class = EvacuationHistoryListSerializer
+
+
+class DemoEvacuationHistoryListSerializer(EvacuationHistoryListSerializer):
+
+    def to_representation(self, instances):
+        # デモ用に突っ込んだ時間のデータを現在の時間に置換
+        data = super(DemoEvacuationHistoryListSerializer, self).to_representation(instances)
+        current = data[0]['created_at']
+        latest = current - timedelta(
+            minutes=current.minute % 10, seconds=current.second, microseconds=current.microsecond
+        )
+        for i in range(1, len(data)-1):
+            data[i]['created_at'] = latest - timedelta(minutes=10*(i-1))
+        return data
+
+
+class DemoEvacuationHistorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = EvacuationHistory
+        fields = ('created_at', 'count')
+        list_serializer_class = DemoEvacuationHistoryListSerializer
 
 
 class PersonalEvacuationHistorySerializer(serializers.ModelSerializer):
