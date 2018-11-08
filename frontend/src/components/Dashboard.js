@@ -4,7 +4,7 @@ import {
   Paper,
   Tabs, Tab,
   List, ListItem, ListItemIcon, ListItemText, ListSubheader,
-  Table, TableBody, TableCell, TableHead, TableFooter, TableSortLabel, TablePagination, TableRow
+  Table, TableBody, TableCell, TableHead, TableRow
 } from '@material-ui/core';
 import * as icons from '@material-ui/icons';
 import * as mockdata from '../config/mockdata';
@@ -40,27 +40,33 @@ export default class Dashboard extends Component {
 
         {this.state.tab === 0 &&
         <Grid container justify='center' style={{padding: 10}}>
-          <Grid item xs={12} md={6} lg={6} xl={6}>
-            <List
-              subheader={<ListSubheader component="div">発令中の警報・注意報</ListSubheader>}
-            >
-              {mockdata.area.alarms.map((alarm, key) => (
-                <ListItem key={key}>
-                  {alarm.type === 0 && <ListItemIcon>
-                    <icons.Warning style={{color: "#D7DF01"}}/>
-                  </ListItemIcon>}
-                  {alarm.type === 1 && <ListItemIcon>
-                    <icons.Error style={{color: "#DF0101"}}/>
-                  </ListItemIcon>}
-                  <ListItemText primary={alarm.name}/>
-                </ListItem>
-              ))}
-            </List>
-          </Grid>
-          <Grid item xs={12} md={6} lg={6} xl={6}>
-            <p>危険度</p>
-            <p>TODO: 何かのグラフ</p>
-          </Grid>
+          {this.props.canUseLocation ?
+            <React.Fragment>
+              <Grid item xs={12} md={6} lg={6} xl={6}>
+                <List
+                  subheader={<ListSubheader component="div">発令中の警報・注意報</ListSubheader>}
+                >
+                  {mockdata.area.alarms.map((alarm, key) => (
+                    <ListItem key={key}>
+                      {alarm.type === 0 && <ListItemIcon>
+                        <icons.Warning style={{color: "#D7DF01"}}/>
+                      </ListItemIcon>}
+                      {alarm.type === 1 && <ListItemIcon>
+                        <icons.Error style={{color: "#DF0101"}}/>
+                      </ListItemIcon>}
+                      <ListItemText primary={alarm.name}/>
+                    </ListItem>
+                  ))}
+                </List>
+              </Grid>
+              <Grid item xs={12} md={6} lg={6} xl={6}>
+                <p>危険度</p>
+                <p>TODO: 何かのグラフ</p>
+              </Grid>
+            </React.Fragment>
+            :
+            <p>現在地情報を使用できません</p>
+          }
         </Grid>
         }
 
@@ -79,7 +85,8 @@ export default class Dashboard extends Component {
                 <TableRow key={key}>
                   <TableCell>{friend.username}</TableCell>
                   <TableCell>{friend.refuged ? "避難済み" : "-"}</TableCell>
-                  <TableCell onClick={(e) => this.props.pickShelter(friend.shelter)}>{friend.refuged ? friend.shelter.name : "-"}</TableCell>
+                  <TableCell
+                    onClick={(e) => this.props.pickShelter(friend.shelter)}>{friend.refuged ? friend.shelter.name : "-"}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

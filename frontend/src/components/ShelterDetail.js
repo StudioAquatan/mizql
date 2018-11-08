@@ -51,14 +51,19 @@ export default class ShelterDetail extends Component {
               <Typography variant="h5">{this.state.shelter.name}</Typography>
               <Typography>{this.state.shelter.distance} m</Typography>
               <Typography>{this.state.shelter.address}</Typography>
-              <Button
-                style={{boxShadow: 'none'}}
-                variant="contained"
-                color="secondary"
-                href={location.getGoogleMapRouteLink(this.props.myPosition, {lat: this.state.shelter.lat, lng: this.state.shelter.lon})}
-              >
-                ルートを表示
-              </Button>
+              {this.props.myPosition ?
+                <Button
+                  style={{boxShadow: 'none'}}
+                  variant="contained"
+                  color="secondary"
+                  href={location.getGoogleMapRouteLink(this.props.myPosition, {
+                    lat: this.state.shelter.lat,
+                    lng: this.state.shelter.lon
+                  })}
+                >
+                  ルートを表示
+                </Button>
+                : null}
             </Paper>
           </Grid>
         </Grid>
