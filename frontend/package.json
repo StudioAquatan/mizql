@@ -6,6 +6,7 @@
     "@material-ui/core": "^3.3.2",
     "@material-ui/icons": "^3.0.1",
     "dotenv-cli": "^1.4.0",
+    "moment": "^2.22.2",
     "react": "^16.6.0",
     "react-d3-gauge": "^0.0.1",
     "react-dom": "^16.6.0",
