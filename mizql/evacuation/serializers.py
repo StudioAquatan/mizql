@@ -40,11 +40,18 @@ class PersonalEvacuationHistorySerializer(serializers.ModelSerializer):
         fields = ('pk', 'shelter', 'is_evacuated')
 
     def create(self, validated_data):
+        shelter_id = validated_data['shelter_id']
+        is_evacuated = validated_data['is_evacuated']
         user = self.context['request'].user
-        history, is_created = PersonalEvacuationHistory.objects.get_or_create(
-            shelter_id=validated_data['shelter_id'], user=user, is_evacuated=validated_data['is_evacuated'],
-            created_at=timezone.now()
+        user_histories = PersonalEvacuationHistory.objects.filter(user=user).order_by('-created_at').all()
+        evacuated = [h for h in user_histories if h.is_evacuated]
+        if len(evacuated) > 0:
+            if is_evacuated:
+                raise serializers.ValidationError({'is_evacuated': 'You have already evacuate.'})
+            for e in evacuated:
+                e.is_evacuated = False
+                e.save()
+            return evacuated[0]
+        return PersonalEvacuationHistory.objects.create(
+            shelter_id=shelter_id, user=user, is_evacuated=is_evacuated, created_at=timezone.now()
         )
-        if not is_created:
-            raise serializers.ValidationError({'is_evacuated': 'You have already evacuate.'})
-        return history
