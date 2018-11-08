@@ -24,7 +24,7 @@ export default class Dashboard extends Component {
 
   render() {
     return (
-      <Paper>
+      <Paper style={{width: '100%', overflowX: 'auto'}}>
         <Paper square style={{boxShadow: 'none', borderBottom: '1px solid #e8e8e8'}}>
           <Tabs
             value={this.state.tab}
@@ -66,7 +66,7 @@ export default class Dashboard extends Component {
 
         {this.state.tab === 1 &&
         <div style={{padding: '10px'}}>
-          <Table style={{minWidth: '600px'}}>
+          <Table style={{minWidth: 500}}>
             <TableHead>
               <TableRow>
                 <TableCell>名前</TableCell>
