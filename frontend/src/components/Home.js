@@ -7,6 +7,7 @@ import {
   CircularProgress,
   Drawer,
   Grid,
+  Paper,
   Typography,
   Toolbar,
 } from '@material-ui/core';
@@ -30,6 +31,7 @@ export default class Home extends Component {
       pickShelter: null,
       showDetail: false,
       isLogin: false,
+      isNearShelter: true,
     };
   }
 
@@ -67,6 +69,11 @@ export default class Home extends Component {
     this.setState({isLogin: false});
   }
 
+  evacuate() {
+    this.setState({isNearShelter: false});
+    console.log('避難完了登録しました');
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -83,8 +90,39 @@ export default class Home extends Component {
         </AppBar>
 
         <Grid container justify='center'>
+
+          {this.state.isNearShelter ?
+            <Grid item xs={12}>
+              <Paper
+                style={{
+                  margin: "5px 10px 0px 10px",
+                  padding: '5px',
+                  boxShadow: 'none',
+                  border: `solid 2px ${theme.palette.secondary.light}`,
+                  textAlign: 'center',
+                }}
+              >
+                <Typography>
+                  あなたは{mockdata.shelters[0].name}の近くにいます．
+                </Typography>
+                <Button
+                  size="small" variant="outlined" color="secondary" style={{margin: "0px 5px"}}
+                  onClick={this.evacuate.bind(this)}
+                >
+                  避難完了
+                </Button>
+                <Button
+                  size="small" variant="outlined" style={{margin: "0px 5px"}}
+                  onClick={() => this.setState({isNearShelter: false})}
+                >
+                  キャンセル
+                </Button>
+              </Paper>
+            </Grid>
+            : null}
+
           <Grid item xs={12} style={{margin: 10}}>
-            <Dashboard/>
+            <Dashboard pickShelter={this.pickShelter.bind(this)} canUseLocation={this.state.canUseGeolocation}/>
           </Grid>
 
           {this.state.canUseGeolocation ?
