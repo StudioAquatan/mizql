@@ -15,6 +15,7 @@ import {
 } from 'recharts';
 import * as mockdata from '../config/mockdata';
 import * as location from '../modules/location';
+import * as api from '../modules/api';
 import theme from '../config/theme';
 
 export default class ShelterDetail extends Component {
@@ -22,7 +23,17 @@ export default class ShelterDetail extends Component {
     super(props);
     this.state = {
       shelter: props.shelter,
+      history: null,
     };
+  }
+
+  componentDidMount(){
+    api.getShelterHistory(this.props.shelter.pk).then((history) => {
+      console.log(history);
+      this.setState({history: history});
+    }).catch((error) => {
+      console.error(error);
+    });
   }
 
   render() {
