@@ -173,15 +173,15 @@ export default class Home extends Component {
             <Grid item xs={12} md={5}>
               <Card style={{height: theme.googleMap.height}}>
                 <CardContent style={{padding: 0, textAlign: 'center'}}>
-                  {this.state.location ?
-                    <ShelterMap
-                      myPosition={this.state.location}
-                      shelters={this.state.shelters}
-                      pickShelter={this.pickShelter.bind(this)}
-                    />
-                    :
+                  {/*{this.state.location ?*/}
+                    {/*<ShelterMap*/}
+                      {/*myPosition={this.state.location}*/}
+                      {/*shelters={this.state.shelters}*/}
+                      {/*pickShelter={this.pickShelter.bind(this)}*/}
+                    {/*/>*/}
+                    {/*:*/}
                     <CircularProgress color="secondary" style={{marginTop: '180px'}}/>
-                  }
+                  {/*}*/}
                 </CardContent>
               </Card>
             </Grid>

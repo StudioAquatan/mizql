@@ -46,14 +46,13 @@ export default class Dashboard extends Component {
           </Tabs>
         </Paper>
 
+        {/* Tab1 */}
         {this.state.tab === 0 &&
-        <Grid container justify='center' style={{padding: 10}} spacing={8}>
+        <Grid container justify='center' alignItems='center' direction='row' style={{padding: 10}} spacing={16}>
           {this.props.canUseLocation ?
             <React.Fragment>
-              <Grid item xs={12} md={4} lg={4} xl={4}>
-                <List
-                  subheader={<ListSubheader component="div">発令中の警報・注意報</ListSubheader>}
-                >
+              <Grid item xs={12} md={3} lg={3} xl={3}>
+                <List subheader={<ListSubheader component="div">発令中の警報・注意報</ListSubheader>}>
                   {mockdata.area.alarms.map((alarm, key) => (
                     <ListItem key={key}>
                       {alarm.type === 0 && <ListItemIcon>
@@ -67,12 +66,10 @@ export default class Dashboard extends Component {
                   ))}
                 </List>
               </Grid>
-              <Grid item xs={12} md={4} lg={4} xl={4}>
-                <Precipitation/>
-              </Grid>
-              <Grid item xs={12} md={4} lg={4} xl={4}>
-                <DangerScore score={mockdata.area.score}/>
-              </Grid>
+
+              <Precipitation/>
+
+              <DangerScore score={mockdata.area.score}/>
             </React.Fragment>
             :
             <p>現在地情報を使用できません</p>
@@ -80,6 +77,7 @@ export default class Dashboard extends Component {
         </Grid>
         }
 
+        {/* Tab2 */}
         {this.state.tab === 1 && this.props.userInfo &&
         <div style={{padding: '10px'}}>
           <Table style={{minWidth: 500}}>
