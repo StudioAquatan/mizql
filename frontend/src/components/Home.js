@@ -217,6 +217,7 @@ export default class Home extends Component {
           anchor="bottom"
           open={this.state.showDetail}
           onClose={() => this.pickShelter(null)}
+          transitionDuration={200}
         >
           <ShelterDetail
             myPosition={this.state.location}

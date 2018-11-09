@@ -46,7 +46,7 @@ export default class Precipitation extends Component {
     return (
       <Grid
         item xs={12} md={5} lg={5} xl={5}
-        style={{textAlign: 'center'}}
+        style={{textAlign: 'center', paddingRight: '50px'}}
       >
         <ResponsiveContainer width='100%' height={200}>
           <AreaChart data={this.state.data}>
@@ -60,8 +60,8 @@ export default class Precipitation extends Component {
             />
             <Area
               type="monotone" dataKey="amount"
-              storoke={theme.palette.primary.dark}
-              fill={theme.palette.primary.light}
+              storoke='#34314c'
+              fill='#47b8e0'
             />
           </AreaChart>
         </ResponsiveContainer>
