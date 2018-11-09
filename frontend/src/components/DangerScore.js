@@ -2,15 +2,16 @@ import React, {Component} from 'react';
 import ReactD3Gauge from 'react-d3-gauge';
 import {Typography, Grid} from '@material-ui/core';
 import theme from '../config/theme';
+import ReactSpeedometer from 'react-d3-speedometer';
 
 export default class DangerScore extends Component {
-  convertLevel = (score) => {
+  normalizeLevel = (score) => {
     if (!score) {
       return 0
-    } else if (score > 4) {
-      return 100
+    } else if (score > 5) {
+      return 5
     }
-    return score * 25 - 25 / 2;
+    return score;
   };
 
   getDisplayMessage = (score) => {
@@ -34,18 +35,18 @@ export default class DangerScore extends Component {
 
   render() {
     return (
-      <Grid
-        item xs={12} md={4} lg={4} xl={4}
-        style={{textAlign: 'center'}}
-      >
-        <React.Fragment>
-          <ReactD3Gauge
-            needleColor={theme.palette.primary.dark}
-            colors={theme.dashboard.dangerMeter.colors}
-            percent={this.convertLevel(this.props.level)}
-          />
-          <Typography variant="h6">{this.getDisplayMessage(this.props.level)}</Typography>
-        </React.Fragment>
+      <Grid item xs={12} md={4} lg={4} xl={4} style={{textAlign: 'center'}}>
+          <div style={{height: '300px', width: 'auto'}}>
+            <ReactSpeedometer
+              fluidWidth={true}
+              maxValue={5}
+              needleColor={theme.palette.primary.dark}
+              value={this.normalizeLevel(this.props.level)}
+              startColor={theme.dashboard.dangerMeter.startColor}
+              endColor={theme.dashboard.dangerMeter.endColor}
+              currentValueText={this.getDisplayMessage(this.props.level)}
+            />
+          </div>
       </Grid>
     );
   }

@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {
-  Typography, Button,
   Grid,
   Paper,
   Tabs, Tab,
@@ -8,7 +7,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableRow, TablePagination, TableFooter
 } from '@material-ui/core';
 import {
-  DirectionsRun, CheckCircleOutline, DoneOutline, Home
+  DoneOutline, Home
 } from '@material-ui/icons';
 import theme from '../config/theme';
 import * as icons from '@material-ui/icons';
