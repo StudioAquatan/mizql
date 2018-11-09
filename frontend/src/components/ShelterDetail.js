@@ -60,11 +60,12 @@ export default class ShelterDetail extends Component {
           {this.state.history ?
             <Grid item xs={12} lg={6} xl={6}>
               <Paper style={{padding: "20px", margin: "5px"}}>
+                <Typography>避難受け入れ状況 ({this.state.history[0].count}/{this.state.shelter.capacity}人)</Typography>
                 <ResponsiveContainer width='100%' height={300}>
                   <BarChart data={this.createHistoryData(this.state.history)}>
                     <XAxis dataKey="time"/>
-                    <YAxis/>
-                    <ReferenceLine y={this.state.shelter.capacity} lavel="Max" stroke="red"/>
+                    <YAxis type="number" domain={[0, Math.round(this.state.shelter.capacity * 1.2)]}/>
+                    <ReferenceLine y={this.state.shelter.capacity} stroke="red" strokeDasharray="3 3" label="Max"/>
                     <Bar dataKey="count" fill={theme.palette.secondary.light}/>
                   </BarChart>
                 </ResponsiveContainer>
