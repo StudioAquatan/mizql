@@ -80,7 +80,7 @@ export default class Dashboard extends Component {
         </Grid>
         }
 
-        {this.state.tab === 1 &&
+        {this.state.tab === 1 && this.props.userInfo &&
         <div style={{padding: '10px'}}>
           <Table style={{minWidth: 500}}>
             <TableHead>

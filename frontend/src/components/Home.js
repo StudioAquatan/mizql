@@ -34,21 +34,30 @@ export default class Home extends Component {
       isLogin: false,
       isNearShelter: true,
       userInfo: null,
+      area: null,
     };
   }
 
   componentDidMount() {
     location.getPosition().then((value) => {
+      this.setState({
+        location: {
+          lat: value.lat,
+          lng: value.lng,
+        },
+      });
+
       api.getShelters(value.lat, value.lng, 1000).then((shelters) => {
         console.log(shelters);
         console.log(value);
-        this.setState({
-          location: {
-            lat: value.lat,
-            lng: value.lng,
-          },
-          shelters: shelters,
-        });
+        this.setState({shelters: shelters,});
+      }).catch((error) => {
+        console.error(error);
+      });
+
+      api.getArea(value.lat, value.lng).then((area) => {
+        console.log(area);
+        this.setState({area: area});
       }).catch((error) => {
         console.error(error);
       });
@@ -144,6 +153,7 @@ export default class Home extends Component {
               pickShelter={this.pickShelter.bind(this)}
               canUseLocation={this.state.canUseGeolocation}
               userInfo={this.state.userInfo}
+              area={this.props.area}
             />
           </Grid>
 
