@@ -33,6 +33,7 @@ export default class Home extends Component {
       showDetail: false,
       isLogin: false,
       isNearShelter: true,
+      userInfo: null,
     };
   }
 
@@ -54,7 +55,16 @@ export default class Home extends Component {
     }).catch((error) => {
       console.error(error);
     });
+
     this.setState({isLogin: auth.isLogin()})
+    if (auth.isLogin()) {
+      api.getUserInfo().then((userInfo) => {
+        console.log(userInfo);
+        this.setState({userInfo: userInfo});
+      }).catch((error) => {
+        console.error(error);
+      });
+    }
   }
 
   pickShelter(shelter) {
@@ -130,7 +140,11 @@ export default class Home extends Component {
             : null}
 
           <Grid item xs={12} style={{margin: 10}}>
-            <Dashboard pickShelter={this.pickShelter.bind(this)} canUseLocation={this.state.canUseGeolocation}/>
+            <Dashboard
+              pickShelter={this.pickShelter.bind(this)}
+              canUseLocation={this.state.canUseGeolocation}
+              userInfo={this.state.userInfo}
+            />
           </Grid>
 
           {this.state.canUseGeolocation ?

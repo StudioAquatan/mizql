@@ -91,7 +91,7 @@ export default class Dashboard extends Component {
               </TableRow>
             </TableHead>
             <TableBody>
-              {mockdata.friends.slice(this.state.friendPage * theme.friendList.rowPerPage, this.state.friendPage * theme.friendList.rowPerPage + theme.friendList.rowPerPage).map((friend, key) => (
+              {this.props.userInfo.follows.slice(this.state.friendPage * theme.friendList.rowPerPage, this.state.friendPage * theme.friendList.rowPerPage + theme.friendList.rowPerPage).map((friend, key) => (
                 <TableRow key={key}>
                   <TableCell>{friend.username}</TableCell>
                   <TableCell>{friend.refuged ? "避難済み" : "-"}</TableCell>
@@ -103,7 +103,7 @@ export default class Dashboard extends Component {
             <TableFooter>
               <TableRow>
                 <TablePagination
-                  count={mockdata.friends.length}
+                  count={this.props.userInfo.follows.length}
                   onChangePage={this.handleChangePage.bind(this)}
                   page={this.state.friendPage}
                   rowsPerPage={5}
