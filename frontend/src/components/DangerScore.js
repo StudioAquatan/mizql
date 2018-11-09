@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {Grid} from '@material-ui/core';
 import theme from '../config/theme';
-import ReactSpeedometer from 'react-d3-speedometer';
 import LiquidFillGauge from 'react-liquid-gauge';
 import {interpolateRgb} from 'd3-interpolate';
 import { color } from 'd3-color';
@@ -24,9 +23,9 @@ export default class DangerScore extends Component {
   getDisplayMessage = (score) => {
     switch (score) {
       case 0:
-        return "問題なし";
+        return "問題無し";
       case 1:
-        return "問題ない";
+        return "問題無し";
       case 2:
         return "注意";
       case 3:
