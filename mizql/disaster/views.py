@@ -27,12 +27,19 @@ class LocationView(generics.RetrieveAPIView):
         ),
     ])
 
+    def retrieve(self, request, *args, **kwargs):
+        lat = request.query_params.get('lat')
+        lon = request.query_params.get('lon')
+        if lat is None or lon is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
     def get_object(self):
         """クエリパラメータから緯度経度取得して情報を返す"""
         lat = self.request.query_params.get('lat')
         lon = self.request.query_params.get('lon')
-        if lat is None or lon is None:
-            return Response(status=status.HTTP_404_NOT_FOUND)
         reporter = DisasterReport(lat, lon)
         loc = reporter.get_area_info()
         rain_reporter = RainReporter(lat, lon)
@@ -61,13 +68,22 @@ class DemoLocationView(generics.RetrieveAPIView):
         )
     ])
 
+    def retrieve(self, request, *args, **kwargs):
+        lat = request.query_params.get('lat')
+        lon = request.query_params.get('lon')
+        if lat is None or lon is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        instance = self.get_object()
+        if instance is None:
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
     def get_object(self):
         """クエリパラメータから緯度経度取得して情報を返す"""
         lat = self.request.query_params.get('lat')
         lon = self.request.query_params.get('lon')
         d_str = self.request.query_params.get('date')
-        if lat is None or lon is None:
-            return Response(status=status.HTTP_404_NOT_FOUND)
         reporter = DisasterReport(lat, lon)
         reporter.location_class = DemoLocation
         reporter.alarm_class = DemoAlarm
@@ -76,7 +92,5 @@ class DemoLocationView(generics.RetrieveAPIView):
         else:
             d_str = d_str + '+0900'
         loc = reporter.get_area_info(datetime.strptime(d_str, "%Y-%m-%d_%H:%M:%S%z"))
-        if loc is None:
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         return loc
 

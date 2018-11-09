@@ -47,8 +47,4 @@ class Command(BaseCommand):
         print("Area name:", loc.name)
         print("Alarms:")
         for alarm in loc.alarms.all():
-            print('\t', alarm.name, end='')
-            if alarm.is_deleted:
-                print(': 解除済')
-            else:
-                print(': 発令中')
+            print('\t', alarm.name)
