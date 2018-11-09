@@ -3,7 +3,8 @@ import {
   Button,
   Grid,
   Paper,
-  Typography
+  Typography,
+  CircularProgress
 } from '@material-ui/core';
 import {KeyboardArrowDown} from '@material-ui/icons';
 import {
@@ -56,34 +57,37 @@ export default class ShelterDetail extends Component {
           <KeyboardArrowDown/>
         </Button>
 
-        <Grid container justify="center" style={{padding: "10px"}}>
-          {this.state.history ?
-            <Grid item xs={12} lg={7} xl={7}>
-              <Paper style={{padding: "20px", margin: "5px"}}>
-                <Typography>避難受け入れ状況 ({this.state.history[0].count}/{this.state.shelter.capacity}人)</Typography>
-                <ResponsiveContainer width='100%' height={300}>
-                  <BarChart data={this.createHistoryData(this.state.history)}>
-                    <XAxis dataKey="time"/>
-                    <YAxis type="number" domain={[0, Math.round(this.state.shelter.capacity * 1.2)]}/>
-                    <ReferenceLine y={this.state.shelter.capacity} stroke="red" strokeDasharray="3 3" label="Max"/>
-                    <Bar dataKey="count" fill={theme.palette.secondary.light}/>
-                  </BarChart>
-                </ResponsiveContainer>
-              </Paper>
-            </Grid>
-            : null
-          }
+        <Grid container spacing={8} justify="center" style={{padding: "10px"}}>
+          <Grid item xs={12} lg={7} xl={7}>
+            <Paper style={{padding: "20px", textAlign: 'center'}}>
+              {this.state.history ?
+                <React.Fragment>
+                  <Typography variant="h6">避難受け入れ状況 ({this.state.history[0].count}/{this.state.shelter.capacity}人)</Typography>
+                  <ResponsiveContainer width='100%' height={300}>
+                    <BarChart data={this.createHistoryData(this.state.history)}>
+                      <XAxis dataKey="time"/>
+                      <YAxis type="number" domain={[0, Math.round(this.state.shelter.capacity * 1.2)]}/>
+                      <ReferenceLine y={this.state.shelter.capacity} stroke="red" strokeDasharray="3 3" label="Max"/>
+                      <Bar dataKey="count" fill={theme.palette.secondary.light}/>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </React.Fragment>
+                :
+                <CircularProgress color="secondary"/>
+              }
+            </Paper>
+          </Grid>
 
           <Grid item xs={12} lg={5} xl={5}>
             <Paper
               justify="center"
-              style={{padding: "20px", margin: "5px"}}
+              style={{padding: "20px"}}
             >
               <Typography variant="h5">{this.state.shelter.name}</Typography>
               <Typography>({this.state.shelter.distance} m) {this.state.shelter.address}</Typography>
               {this.props.myPosition ?
                 <Button
-                  style={{boxShadow: 'none'}}
+                  style={{boxShadow: 'none', marginTop: '10px'}}
                   variant="contained"
                   color="secondary"
                   href={location.getGoogleMapRouteLink(this.props.myPosition, {

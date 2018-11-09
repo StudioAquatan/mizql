@@ -33,7 +33,6 @@ export default class ShelterList extends Component {
             <TableRow>
               <TableCell>避難所名</TableCell>
               <TableCell numeric>距離 [m]</TableCell>
-              {/*<TableCell>住所</TableCell>*/}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -45,7 +44,6 @@ export default class ShelterList extends Component {
               >
                 <TableCell>{shelter.name}</TableCell>
                 <TableCell numeric>{shelter.distance} m</TableCell>
-                {/*<TableCell>{shelter.address}</TableCell>*/}
               </TableRow>
             ))}
           </TableBody>
