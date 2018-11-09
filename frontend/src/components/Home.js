@@ -14,6 +14,7 @@ import {
 import * as location from '../modules/location';
 import * as auth from '../modules/auth';
 import * as mockdata from "../config/mockdata";
+import * as api from "../modules/api";
 import ShelterMap from "./Map";
 import ShelterList from './ShelterList';
 import Dashboard from './Dashboard';
@@ -27,26 +28,53 @@ export default class Home extends Component {
     this.state = {
       location: null,
       canUseGeolocation: location.canGetPosition(),
-      shelters: mockdata.shelters,
+      shelters: [],
       pickShelter: null,
       showDetail: false,
       isLogin: false,
       isNearShelter: true,
+      userInfo: null,
+      area: null,
     };
   }
 
   componentDidMount() {
     location.getPosition().then((value) => {
+      console.log('get position');
       this.setState({
         location: {
           lat: value.lat,
           lng: value.lng,
         },
       });
+
+      api.getShelters(value.lat, value.lng, 1000).then((shelters) => {
+        console.log(shelters);
+        console.log(value);
+        this.setState({shelters: shelters,});
+      }).catch((error) => {
+        console.error(error);
+      });
+
+      api.getArea(value.lat, value.lng).then((area) => {
+        console.log(area);
+        this.setState({area: area});
+      }).catch((error) => {
+        console.error(error);
+      });
     }).catch((error) => {
       console.error(error);
     });
+
     this.setState({isLogin: auth.isLogin()})
+    if (auth.isLogin()) {
+      api.getUserInfo().then((userInfo) => {
+        console.log(userInfo);
+        this.setState({userInfo: userInfo});
+      }).catch((error) => {
+        console.error(error);
+      });
+    }
   }
 
   pickShelter(shelter) {
@@ -71,7 +99,11 @@ export default class Home extends Component {
 
   evacuate() {
     this.setState({isNearShelter: false});
-    console.log('避難完了登録しました');
+    api.postEvacuate(75, true).then(() => {
+      console.log('避難完了登録しました');
+    }).catch((error) => {
+      console.error(error);
+    });
   }
 
   render() {
@@ -91,7 +123,7 @@ export default class Home extends Component {
 
         <Grid container justify='center'>
 
-          {this.state.isNearShelter ?
+          {this.state.shelters.length > 0 ?
             <Grid item xs={12}>
               <Paper
                 style={{
@@ -122,7 +154,12 @@ export default class Home extends Component {
             : null}
 
           <Grid item xs={12} style={{margin: 10}}>
-            <Dashboard pickShelter={this.pickShelter.bind(this)} canUseLocation={this.state.canUseGeolocation}/>
+            <Dashboard
+              pickShelter={this.pickShelter.bind(this)}
+              canUseLocation={this.state.canUseGeolocation}
+              userInfo={this.state.userInfo}
+              area={this.props.area}
+            />
           </Grid>
 
           {this.state.canUseGeolocation ?
