@@ -48,7 +48,7 @@ export default class Home extends Component {
         },
       });
 
-      api.getShelters(value.lat, value.lng, 1000).then((shelters) => {
+      api.getShelters(value.lat, value.lng, 3000).then((shelters) => {
         console.log(shelters);
         console.log(value);
         this.setState({shelters: shelters,});
@@ -66,7 +66,7 @@ export default class Home extends Component {
       console.error(error);
     });
 
-    this.setState({isLogin: auth.isLogin()})
+    this.setState({isLogin: auth.isLogin()});
     if (auth.isLogin()) {
       api.getUserInfo().then((userInfo) => {
         console.log(userInfo);
@@ -121,14 +121,12 @@ export default class Home extends Component {
           </Toolbar>
         </AppBar>
 
-        <Grid container justify='center'>
+        <Grid container justify='center' spacing={8} style={{padding: '10px'}}>
 
           {this.state.shelters.length > 0 ?
             <Grid item xs={12}>
               <Paper
                 style={{
-                  margin: "5px 10px 0px 10px",
-                  padding: '5px',
                   boxShadow: 'none',
                   border: `solid 2px ${theme.palette.secondary.light}`,
                   textAlign: 'center',
@@ -153,7 +151,7 @@ export default class Home extends Component {
             </Grid>
             : null}
 
-          <Grid item xs={12} style={{margin: 10}}>
+          <Grid item xs={12}>
             <Dashboard
               pickShelter={this.pickShelter.bind(this)}
               canUseLocation={this.state.canUseGeolocation}
@@ -164,7 +162,7 @@ export default class Home extends Component {
 
           {this.state.canUseGeolocation ?
             <Grid item xs={12} md={6}>
-              <Card style={{margin: 10, marginTop: 0, height: theme.googleMap.height}}>
+              <Card style={{height: theme.googleMap.height}}>
                 <CardContent style={{padding: 0, textAlign: 'center'}}>
                   {this.state.location ?
                     <ShelterMap
@@ -183,7 +181,7 @@ export default class Home extends Component {
           }
 
           <Grid item xs={12} md={6}>
-            <Card style={{margin: 10, marginTop: 0}}>
+            <Card>
               <CardContent style={{padding: 0, textAlign: 'center'}}>
                 <ShelterList shelters={this.state.shelters} pickShelter={this.pickShelter.bind(this)}/>
               </CardContent>
