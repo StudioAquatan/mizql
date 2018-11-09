@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {
-  AreaChart, Area, Tooltip,
+  AreaChart, Area,
   ResponsiveContainer,
   XAxis, YAxis
 } from 'recharts';
@@ -58,7 +58,6 @@ export default class Precipitation extends Component {
               tickFormatter={this.formatXAxis}
               tick={{fontSize: 11}}
             />
-            <Tooltip/>
             <YAxis
               tick={{fontSize: 11}}
             />
