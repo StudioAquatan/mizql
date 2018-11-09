@@ -22,6 +22,7 @@ class UserSerializer(serializers.ModelSerializer):
         latest = instance.evacuation_histories.order_by('-created_at').first()
         serializer = PersonalEvacuationHistorySerializer(latest, allow_null=True)
         data['evacuation_status'] = serializer.data
+        data['username'] = instance.name
         return data
 
 

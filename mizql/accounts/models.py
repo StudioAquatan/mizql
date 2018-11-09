@@ -64,3 +64,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ordering = ['-created_at']
         verbose_name = 'ユーザ'
         verbose_name_plural = 'ユーザ'
+
+    @property
+    def name(self):
+        return self.last_name + ' ' + self.first_name
