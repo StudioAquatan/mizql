@@ -2,6 +2,7 @@ import requests
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.conf import settings
+from pytz import timezone as pytz
 from typing import Optional, List
 
 from .models import Location, Alarm, RainForecast
@@ -16,6 +17,7 @@ class DisasterReport(object):
     demo_coordinates = (135.780418, 35.048900)
     location_class = Location
     alarm_class = Alarm
+    utc = pytz('UTC')
 
     def __init__(self, lat: float, lon: float):
         self.lat = lat
@@ -57,7 +59,7 @@ class DisasterReport(object):
             'count': len(data),
             'link': data[0]['link'],
             'text': data[0]['headline'],
-            'datetime': datetime.strptime(data[0]['datetime'], self.datetime_parse_format)
+            'datetime': self.utc.normalize(datetime.strptime(data[0]['datetime'], self.datetime_parse_format))
         }
 
     def _get_alarm_detail(self, url: str) -> Optional[List[dict]]:
@@ -114,17 +116,18 @@ class RainReporter(object):
     API_KEY = settings.YOLP_APP_ID
     base_url = 'https://map.yahooapis.jp/weather/V1/place'
     forecast_key = 'forecast'
-    datetime_format = '%Y%m%d%H%M%z'
+    datetime_format = '%Y%m%d%H%M'
+    jst = pytz(settings.TIME_ZONE)
 
     def __init__(self, lat: str, lon: str):
         self.lat = lat
         self.lon = lon
 
     def _make(self, w):
-        created_at = datetime.strptime(str(w['Date']) + '+0900', self.datetime_format)
+        created_at = datetime.strptime(str(w['Date']), self.datetime_format)
         amount = w['Rainfall'] if 'Rainfall' in w.keys() else 0.0
         return {
-            'created_at': created_at,
+            'created_at': self.jst.localize(created_at),
             'amount': amount,
         }
 

@@ -20,16 +20,20 @@ from rest_framework_nested.routers import DefaultRouter, NestedDefaultRouter
 from rest_framework_swagger.views import get_swagger_view
 
 from accounts.views import UserViewSets, MeView
-from evacuation.views import ShelterViewSets, EvacuationHistoryViewSets, EvacuationViewSets
+from evacuation.views import ShelterViewSets, EvacuationHistoryViewSets, EvacuationViewSets, DemoEvacuationHistoryViewSets
 from disaster.views import LocationView, DemoLocationView
 
 router = DefaultRouter()
 router.register(r'users', UserViewSets, basename='users')
 router.register(r'shelters', ShelterViewSets, basename='shelters')
+router.register(r'demo-shelters', ShelterViewSets, basename='demo-shelters')
 
 shelter_nested_router = NestedDefaultRouter(router, 'shelters', lookup='shelter')
 shelter_nested_router.register(r'history', EvacuationHistoryViewSets, basename='history')
 shelter_nested_router.register(r'evacuate', EvacuationViewSets, basename='evacuate')
+
+demo_shelter_nested_serializer = NestedDefaultRouter(router, 'demo-shelters', lookup='shelter')
+demo_shelter_nested_serializer.register('history', DemoEvacuationHistoryViewSets, basename='history')
 
 if not settings.DEBUG:
     url = '/api/'
@@ -42,6 +46,7 @@ urlpatterns = [
     path('users/me/', MeView.as_view()),
     path('', include(router.urls)),
     path('', include(shelter_nested_router.urls)),
+    path('', include(demo_shelter_nested_serializer.urls)),
     path('area/', LocationView.as_view()),
     path('demo-area/', DemoLocationView.as_view()),
     path('auth/', include('djoser.urls.jwt')),

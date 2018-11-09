@@ -1,3 +1,4 @@
+from datetime import timezone
 from rest_framework import serializers
 from .models import Location, Alarm, DemoLocation, DemoAlarm, DemoRainForecast, RainForecast
 
@@ -19,12 +20,13 @@ class ListDemoRainSerializer(serializers.ListSerializer):
         all_data = instance.order_by('-created_at').all()
         forecasts = all_data[:6]
         observations = all_data[6:12]
+        d_f = serializers.DateTimeField()
         return {
             'forecasts': [
-                {'amount': f.amount, 'created_at': f.created_at} for f in forecasts
+                {'amount': f.amount, 'created_at': d_f.to_representation(f.created_at)} for f in forecasts
             ],
             'observations': [
-                {'amount': o.amount, 'created_at': o.created_at} for o in observations
+                {'amount': o.amount, 'created_at': d_f.to_representation(o.created_at)} for o in observations
             ]
         }
 
@@ -43,12 +45,13 @@ class ListRainSerializer(serializers.ListSerializer):
         all_data = instance.order_by('-created_at').all()
         forecasts = all_data.filter(is_observed=False)[:6]
         observations = all_data.filter(is_observed=True)[:6]
+        d_f = serializers.DateTimeField()
         return {
             'forecasts': [
-                {'amount': f.amount, 'created_at': f.created_at} for f in forecasts
+                {'amount': f.amount, 'created_at': d_f.to_representation(f.created_at)} for f in forecasts
             ],
             'observations': [
-                {'amount': o.amount, 'created_at': o.created_at} for o in observations
+                {'amount': o.amount, 'created_at': d_f.to_representation(o.created_at)} for o in observations
             ]
         }
 

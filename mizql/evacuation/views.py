@@ -1,9 +1,16 @@
 import coreapi
 import coreschema
+from datetime import timedelta, datetime
+from django.utils import timezone
 from rest_framework import viewsets, permissions, schemas, mixins, status
 from rest_framework.response import Response
 from .models import Shelter, EvacuationHistory, PersonalEvacuationHistory
-from .serializers import ShelterSerializer, EvacuationHistorySerializer, PersonalEvacuationHistorySerializer
+from .serializers import (
+    ShelterSerializer,
+    EvacuationHistorySerializer,
+    PersonalEvacuationHistorySerializer,
+    DemoEvacuationHistorySerializer,
+)
 
 
 class ShelterViewSets(viewsets.ReadOnlyModelViewSet):
@@ -49,20 +56,62 @@ class ShelterViewSets(viewsets.ReadOnlyModelViewSet):
 
 
 class EvacuationHistoryViewSets(mixins.ListModelMixin,
-                                mixins.CreateModelMixin,
                                 viewsets.GenericViewSet):
     permission_classes = (permissions.AllowAny,)
     queryset = EvacuationHistory.objects.all()
     serializer_class = EvacuationHistorySerializer
 
-    def get_permissions(self):
-        if self.action == 'create':
-            self.permission_classes = [permissions.IsAuthenticated]
-        return super(EvacuationHistoryViewSets, self).get_permissions()
+    def _create_histories(self, shelter_id: int, remaining: int, offset: int, latest: datetime):
+        for i in range(remaining):
+            since = latest + timedelta(minutes=10*i)
+            until = latest + timedelta(minutes=10*(i+1))
+            current = PersonalEvacuationHistory.objects.filter(shelter_id=shelter_id, created_at__range=[since, until])
+            stay = current.filter(is_evacuated=True).all().count()
+            gohome = current.filter(is_evacuated=False).all().count()
+            offset = offset + stay - gohome
+            hist = EvacuationHistory(
+                shelter_id=shelter_id, count=offset, created_at=until, is_demo=False
+            )
+            hist.save()
 
     def list(self, request, *args, **kwargs):
         shelter_id = int(kwargs['shelter_pk'])
-        queryset = self.get_queryset().filter(shelter_id=shelter_id)[:10]
+        now = timezone.now().astimezone(timezone.get_default_timezone())
+        since = now - timedelta(minutes=10*10)
+        queryset = self.get_queryset().filter(
+            shelter_id=shelter_id, is_demo=False, created_at__gte=since
+        ).order_by('-created_at').all()
+        if queryset.count() >= 10:
+            queryset = queryset[:10]
+        else:
+            # 存在するHistoryで最新の物を取得
+            latest = queryset.first()
+            if latest is not None:
+                # 現在時刻との差分がいくつあるか（10分おきのデータを作るので10で割る）
+                remaining = (now - latest.created_at).seconds // 60 // 10
+                offset = latest.count
+                init = latest.created_at
+            else:
+                remaining = 10
+                latest = self.get_queryset().filter(shelter_id=shelter_id, is_demo=False)\
+                    .order_by('-created_at').first()
+                offset = latest.count if latest is not None else 0
+                init = now - timedelta(minutes=now.minute % 10 + 10*9, seconds=now.second, microseconds=now.microsecond)
+            self._create_histories(shelter_id, remaining, offset, init)
+            # 再取得
+            queryset = self.get_queryset().filter(
+                shelter_id=shelter_id, is_demo=False, created_at__gte=since
+            ).order_by('-created_at').all()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class DemoEvacuationHistoryViewSets(EvacuationHistoryViewSets):
+    serializer_class = DemoEvacuationHistorySerializer
+
+    def list(self, request, *args, **kwargs):
+        shelter_id = int(kwargs['shelter_pk'])
+        queryset = self.get_queryset().filter(shelter_id=shelter_id, is_demo=True)[:10]
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -84,5 +133,6 @@ class EvacuationViewSets(mixins.CreateModelMixin,
         data['shelter_id'] = shelter_id
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
+        serializer.save()
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
