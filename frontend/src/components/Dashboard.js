@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {
+  Typography, Button,
   Grid,
   Paper,
   Tabs, Tab,
@@ -31,7 +32,7 @@ export default class Dashboard extends Component {
 
   render() {
     return (
-      <Paper style={{width: '100%', overflowX: 'auto', minHeight: '300px'}}>
+      <Paper style={{width: '100%', marginBottom: '8px'}}>
         <Paper square style={{boxShadow: 'none', borderBottom: '1px solid #e8e8e8'}}>
           <Tabs
             value={this.state.tab}
@@ -51,7 +52,7 @@ export default class Dashboard extends Component {
           {this.props.canUseLocation ?
             <React.Fragment>
               <Grid item xs={12} md={3} lg={3} xl={3}>
-                <List subheader={<ListSubheader component="div">発令中の警報・注意報</ListSubheader>}>
+                <List subheader={<ListSubheader component="div">発令中の警報・注意報 (気象庁)</ListSubheader>}>
                   {this.props.area.alarms.map((alarm, key) => (
                     <ListItem key={key}>
                       {alarm.type === 1 && <ListItemIcon>
@@ -66,9 +67,9 @@ export default class Dashboard extends Component {
                 </List>
               </Grid>
 
-              <Precipitation rain={this.props.area.rain}/>
+            < Precipitation rain = {this.props.area.rain}/>
 
-              <DangerScore level={this.props.area.level}/>
+            <DangerScore level={this.props.area.level}/>
             </React.Fragment>
             :
             <p>現在地情報を使用できません</p>
