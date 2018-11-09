@@ -32,7 +32,7 @@ export default class Home extends Component {
       pickShelter: null,
       showDetail: false,
       isLogin: false,
-      isNearShelter: true,
+      showEvacuateConfirm: false,
       userInfo: null,
       area: null,
     };
@@ -48,14 +48,22 @@ export default class Home extends Component {
         },
       });
 
+      // 3km以内の避難所一覧を取得
       api.getShelters(value.lat, value.lng, 3000).then((shelters) => {
-        console.log(shelters);
-        console.log(value);
-        this.setState({shelters: shelters,});
+        let showConfirm = false;
+        if(shelters.length > 0 && shelters[0].distance <= process.env.REACT_APP_NEAR_THRESHOLD_METER) {
+          showConfirm = true;
+          console.log("near!!!!!!!!!!!!!!!!");
+        }
+        this.setState({
+          shelters: shelters,
+          showEvacuateConfirm: showConfirm,
+        });
       }).catch((error) => {
         console.error(error);
       });
 
+      // 周辺情報の取得
       api.getArea(value.lat, value.lng).then((area) => {
         console.log(area);
         this.setState({area: area});
@@ -98,7 +106,7 @@ export default class Home extends Component {
   }
 
   evacuate() {
-    this.setState({isNearShelter: false});
+    this.setState({showEvacuateConfirm: false});
     api.postEvacuate(75, true).then(() => {
       console.log('避難完了登録しました');
     }).catch((error) => {
@@ -123,17 +131,18 @@ export default class Home extends Component {
 
         <Grid container justify='center' spacing={8} style={{padding: '10px'}}>
 
-          {this.state.shelters.length > 0 ?
+          {this.state.showEvacuateConfirm ?
             <Grid item xs={12}>
               <Paper
                 style={{
+                  padding: "5px",
                   boxShadow: 'none',
                   border: `solid 2px ${theme.palette.secondary.light}`,
                   textAlign: 'center',
                 }}
               >
                 <Typography>
-                  あなたは{mockdata.shelters[0].name}の近くにいます．
+                  あなたは{this.state.shelters[0].name}の近くにいます．
                 </Typography>
                 <Button
                   size="small" variant="outlined" color="secondary" style={{margin: "0px 5px"}}
@@ -143,7 +152,7 @@ export default class Home extends Component {
                 </Button>
                 <Button
                   size="small" variant="outlined" style={{margin: "0px 5px"}}
-                  onClick={() => this.setState({isNearShelter: false})}
+                  onClick={() => this.setState({showEvacuateConfirm: false})}
                 >
                   キャンセル
                 </Button>
