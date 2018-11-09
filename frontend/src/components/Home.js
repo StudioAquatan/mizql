@@ -40,6 +40,7 @@ export default class Home extends Component {
 
   componentDidMount() {
     location.getPosition().then((value) => {
+      console.log('get position');
       this.setState({
         location: {
           lat: value.lat,
@@ -98,7 +99,11 @@ export default class Home extends Component {
 
   evacuate() {
     this.setState({isNearShelter: false});
-    console.log('避難完了登録しました');
+    api.postEvacuate(75, true).then(() => {
+      console.log('避難完了登録しました');
+    }).catch((error) => {
+      console.error(error);
+    });
   }
 
   render() {
@@ -118,7 +123,7 @@ export default class Home extends Component {
 
         <Grid container justify='center'>
 
-          {this.state.isNearShelter ?
+          {this.state.shelters.length > 0 ?
             <Grid item xs={12}>
               <Paper
                 style={{
