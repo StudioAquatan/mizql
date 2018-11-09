@@ -24,15 +24,16 @@ export default class ShelterList extends Component {
     }
     return(
       <Paper style={{
+        height: '100%',
         width: '100%',
         overflowX: 'auto',
       }}>
-        <Table style={{minWidth: 700}}>
+        <Table style={{minWidth: 300}}>
           <TableHead>
             <TableRow>
               <TableCell>避難所名</TableCell>
               <TableCell numeric>距離 [m]</TableCell>
-              <TableCell>住所</TableCell>
+              {/*<TableCell>住所</TableCell>*/}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -44,7 +45,7 @@ export default class ShelterList extends Component {
               >
                 <TableCell>{shelter.name}</TableCell>
                 <TableCell numeric>{shelter.distance} m</TableCell>
-                <TableCell>{shelter.address}</TableCell>
+                {/*<TableCell>{shelter.address}</TableCell>*/}
               </TableRow>
             ))}
           </TableBody>

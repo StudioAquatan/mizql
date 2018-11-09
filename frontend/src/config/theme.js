@@ -19,7 +19,7 @@ const theme = createMuiTheme({
     },
   },
   googleMap: {
-    height: '500px',
+    height: '600px',
   },
   friendList: {
     rowPerPage: 5,

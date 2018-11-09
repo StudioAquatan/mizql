@@ -58,7 +58,7 @@ export default class ShelterDetail extends Component {
 
         <Grid container justify="center" style={{padding: "10px"}}>
           {this.state.history ?
-            <Grid item xs={12} lg={6} xl={6}>
+            <Grid item xs={12} lg={7} xl={7}>
               <Paper style={{padding: "20px", margin: "5px"}}>
                 <Typography>避難受け入れ状況 ({this.state.history[0].count}/{this.state.shelter.capacity}人)</Typography>
                 <ResponsiveContainer width='100%' height={300}>
@@ -74,14 +74,13 @@ export default class ShelterDetail extends Component {
             : null
           }
 
-          <Grid item xs={12} lg={6} xl={6}>
+          <Grid item xs={12} lg={5} xl={5}>
             <Paper
               justify="center"
-              style={{padding: "20px", margin: "5px", height: '300px'}}
+              style={{padding: "20px", margin: "5px"}}
             >
               <Typography variant="h5">{this.state.shelter.name}</Typography>
-              <Typography>{this.state.shelter.distance} m</Typography>
-              <Typography>{this.state.shelter.address}</Typography>
+              <Typography>({this.state.shelter.distance} m) {this.state.shelter.address}</Typography>
               {this.props.myPosition ?
                 <Button
                   style={{boxShadow: 'none'}}
