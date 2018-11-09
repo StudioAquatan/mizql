@@ -24,9 +24,9 @@ export default class DangerScore extends Component {
   getDisplayMessage = (score) => {
     switch (score) {
       case 0:
-        return "問題なし";
+        return "問題無し";
       case 1:
-        return "問題ない";
+        return "問題無し";
       case 2:
         return "注意";
       case 3:
