@@ -132,7 +132,6 @@ export default class Home extends Component {
           <Toolbar>
             <Typography variant='h6' color='inherit' component={Link} to="/" style={{flex: 1, textDecoration: 'none'}}>
               Mizukuru Map
-              {this.state.isDemo ? " - Demo" : null}
             </Typography>
             {this.state.isDemo ?
               <Button color="inherit" onClick={() => this.toggleDemoMode(false)}>Normal</Button>
