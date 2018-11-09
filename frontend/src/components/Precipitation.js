@@ -5,7 +5,6 @@ import {
   XAxis, YAxis
 } from 'recharts';
 import {Grid, Typography} from '@material-ui/core';
-import * as mockdata from '../config/mockdata';
 import theme from '../config/theme';
 import moment from 'moment';
 
@@ -13,7 +12,7 @@ export default class Precipitation extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: this.convertRainData(mockdata.area.rain),
+      data: this.convertRainData(this.props.rain),
     };
   }
 
@@ -39,6 +38,10 @@ export default class Precipitation extends Component {
   };
 
   render() {
+    if (!this.props.rain.length) {
+      return null;
+    }
+
     return (
       <Grid
         item xs={12} md={5} lg={5} xl={5}

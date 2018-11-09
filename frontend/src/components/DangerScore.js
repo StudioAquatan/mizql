@@ -4,7 +4,7 @@ import {Typography, Grid} from '@material-ui/core';
 import theme from '../config/theme';
 
 export default class DangerScore extends Component {
-  convertScoreToLevel = (score) => {
+  convertLevel = (score) => {
     if (!score) {
       return 0
     } else if (score > 4) {
@@ -33,8 +33,8 @@ export default class DangerScore extends Component {
   };
 
   render() {
-    const level = this.convertScoreToLevel(this.props.score);
-    const msg = this.getDisplayMessage(this.props.score);
+    const level = this.convertLevel(this.props.level);
+    const msg = this.getDisplayMessage(this.props.level);
 
     return (
       <Grid

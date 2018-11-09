@@ -12,11 +12,12 @@ import {
   ResponsiveContainer,
   XAxis,
   YAxis,
+  ReferenceLine,
 } from 'recharts';
-import * as mockdata from '../config/mockdata';
 import * as location from '../modules/location';
 import * as api from '../modules/api';
 import theme from '../config/theme';
+import moment from 'moment';
 
 export default class ShelterDetail extends Component {
   constructor(props) {
@@ -25,11 +26,23 @@ export default class ShelterDetail extends Component {
       shelter: props.shelter,
       history: null,
     };
+    console.log(this.state.shelter);
   }
 
-  componentDidMount(){
+  createHistoryData = (history) => {
+    let data = [];
+    history.forEach((elm) => {
+      data.push({
+        count: elm.count,
+        time: moment(elm.created_at).format("HH:mm"),
+      });
+    });
+    console.log(history);
+    return data.reverse();
+  };
+
+  componentDidMount() {
     api.getShelterHistory(this.props.shelter.pk).then((history) => {
-      console.log(history);
       this.setState({history: history});
     }).catch((error) => {
       console.error(error);
@@ -42,18 +55,24 @@ export default class ShelterDetail extends Component {
         <Button color="inherit" onClick={() => this.props.pickShelter(null)} style={{backgroundColor: "#fafafa"}}>
           <KeyboardArrowDown/>
         </Button>
+
         <Grid container justify="center" style={{padding: "10px"}}>
-          <Grid item xs={12} lg={6} xl={6}>
-            <Paper style={{padding: "20px", margin: "5px"}}>
-              <ResponsiveContainer width='100%' height={300}>
-                <BarChart data={mockdata.evacuees}>
-                  <XAxis dataKey="time"/>
-                  <YAxis/>
-                  <Bar dataKey="num" fill={theme.palette.secondary.light}/>
-                </BarChart>
-              </ResponsiveContainer>
-            </Paper>
-          </Grid>
+          {this.state.history ?
+            <Grid item xs={12} lg={6} xl={6}>
+              <Paper style={{padding: "20px", margin: "5px"}}>
+                <ResponsiveContainer width='100%' height={300}>
+                  <BarChart data={this.createHistoryData(this.state.history)}>
+                    <XAxis dataKey="time"/>
+                    <YAxis/>
+                    <ReferenceLine y={this.state.shelter.capacity} lavel="Max" stroke="red"/>
+                    <Bar dataKey="count" fill={theme.palette.secondary.light}/>
+                  </BarChart>
+                </ResponsiveContainer>
+              </Paper>
+            </Grid>
+            : null
+          }
+
           <Grid item xs={12} lg={6} xl={6}>
             <Paper
               justify="center"

@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import theme from '../config/theme';
 import * as icons from '@material-ui/icons';
-import * as mockdata from '../config/mockdata';
+// import * as mockdata from '../config/mockdata';
 import * as auth from '../modules/auth';
 import Precipitation from './Precipitation';
 import DangerScore from './DangerScore';
@@ -19,7 +19,7 @@ export default class Dashboard extends Component {
     this.state = {
       tab: 0,
       friendPage: 0,
-    }
+    };
   }
 
   handleTabChange(e, v) {
@@ -32,7 +32,7 @@ export default class Dashboard extends Component {
 
   render() {
     return (
-      <Paper style={{width: '100%', overflowX: 'auto'}}>
+      <Paper style={{width: '100%', overflowX: 'auto', minHeight: '300px'}}>
         <Paper square style={{boxShadow: 'none', borderBottom: '1px solid #e8e8e8'}}>
           <Tabs
             value={this.state.tab}
@@ -53,7 +53,7 @@ export default class Dashboard extends Component {
             <React.Fragment>
               <Grid item xs={12} md={3} lg={3} xl={3}>
                 <List subheader={<ListSubheader component="div">発令中の警報・注意報</ListSubheader>}>
-                  {mockdata.area.alarms.map((alarm, key) => (
+                  {this.props.area.alarms.map((alarm, key) => (
                     <ListItem key={key}>
                       {alarm.type === 0 && <ListItemIcon>
                         <icons.Warning style={{color: "#D7DF01"}}/>
@@ -67,9 +67,9 @@ export default class Dashboard extends Component {
                 </List>
               </Grid>
 
-              <Precipitation/>
+              <Precipitation rain={this.props.area.rain}/>
 
-              <DangerScore score={mockdata.area.score}/>
+              <DangerScore level={this.props.area.level}/>
             </React.Fragment>
             :
             <p>現在地情報を使用できません</p>

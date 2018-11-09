@@ -35,12 +35,12 @@ export default class Home extends Component {
       showEvacuateConfirm: false,
       userInfo: null,
       area: null,
+      isDemo: false,
     };
   }
 
   componentDidMount() {
     location.getPosition().then((value) => {
-      console.log('get position');
       this.setState({
         location: {
           lat: value.lat,
@@ -114,6 +114,11 @@ export default class Home extends Component {
     });
   }
 
+  toggleDemoMode() {
+    console.log("toggle");
+    this.setState({isDemo: !this.state.isDemo});
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -121,11 +126,18 @@ export default class Home extends Component {
           <Toolbar>
             <Typography variant='h6' color='inherit' component={Link} to="/" style={{flex: 1, textDecoration: 'none'}}>
               Mizukuru Map
+              {this.state.isDemo ? " - Demo" : null}
             </Typography>
+            {this.state.isDemo ?
+              <Button color="inherit" onClick={() => this.toggleDemoMode()}>Normal</Button>
+              :
+              <Button color="inherit" onClick={() => this.toggleDemoMode()}>Demo</Button>
+            }
             {this.state.isLogin ?
               <Button color="inherit" onClick={() => this.logout()}>Logout</Button>
               :
-              <Button color="inherit" component={Link} to="/login">Login</Button>}
+              <Button color="inherit" component={Link} to="/login">Login</Button>
+            }
           </Toolbar>
         </AppBar>
 
@@ -160,14 +172,16 @@ export default class Home extends Component {
             </Grid>
             : null}
 
-          <Grid item xs={12}>
-            <Dashboard
-              pickShelter={this.pickShelter.bind(this)}
-              canUseLocation={this.state.canUseGeolocation}
-              userInfo={this.state.userInfo}
-              area={this.props.area}
-            />
-          </Grid>
+          {this.state.area ?
+            <Grid item xs={12}>
+              <Dashboard
+                pickShelter={this.pickShelter.bind(this)}
+                canUseLocation={this.state.canUseGeolocation}
+                userInfo={this.state.userInfo}
+                area={this.state.area}
+              />
+            </Grid>
+            : null}
 
           {this.state.canUseGeolocation ?
             <Grid item xs={12} md={5}>
