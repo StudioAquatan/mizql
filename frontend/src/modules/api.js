@@ -24,14 +24,36 @@ export const login = (username, password) => sendRequest("POST", "/auth/jwt/crea
 });
 
 // area
-export const getArea = (lat, lng) => sendRequest("GET", `/area/?lat=${lat}&lon=${lng}`);
-export const getDemoArea = (lat, lng, date) => sendRequest("GET", "/demo-area/", {lat: lat, lon: lng, date: date});
+export const getArea = (lat, lng, isDemo, date) => {
+  if(isDemo){
+    if(date){
+      return sendRequest("GET", `/demo-area/?lat=${lat}&lon=${lng}&date=${date}`);
+    }
+    return sendRequest("GET", `/demo-area/?lat=${lat}&lon=${lng}`);
+  }
+  return sendRequest("GET", `/area/?lat=${lat}&lon=${lng}`);
+};
 
 // shelters
-export const getShelters = (lat, lng, distance) => sendRequest("GET", `/shelters/?lat=${lat}&lon=${lng}&distance=${distance}`);
-export const getShelter = (id) => sendRequest("GET", `/shelters/${id}`, {});
+export const getShelters = (lat, lng, distance, isDemo) => {
+  if(isDemo){
+    return sendRequest("GET", `/demo-shelters/?lat=${lat}&lon=${lng}&distance=${distance}`);
+  }
+  return sendRequest("GET", `/shelters/?lat=${lat}&lon=${lng}&distance=${distance}`);
+};
+export const getShelter = (id, isDemo) => {
+  if(isDemo) {
+    return sendRequest("GET", `/demo-shelters/${id}/`, {});
+  }
+  return sendRequest("GET", `/shelters/${id}/`, {});
+};
+export const getShelterHistory = (shelterId, isDemo) => {
+  if(isDemo){
+    return sendRequest("GET", `/demo-shelters/${shelterId}/history/`);
+  }
+  return sendRequest("GET", `/shelters/${shelterId}/history/`);
+};
 export const postEvacuate = (shelterId, isEvacuate) => sendRequest("POST", `/shelters/${shelterId}/evacuate/`, {is_evacuated: isEvacuate});
-export const getShelterHistory = (shelterId) => sendRequest("GET", `/shelters/${shelterId}/history/`);
 
 // users
 export const getUserInfo = () => sendRequest("GET", "/users/me/", {});

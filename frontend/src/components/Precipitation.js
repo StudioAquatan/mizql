@@ -4,16 +4,17 @@ import {
   ResponsiveContainer,
   XAxis, YAxis
 } from 'recharts';
-import {Typography} from '@material-ui/core';
-import * as mockdata from '../config/mockdata';
+import {Grid, Typography} from '@material-ui/core';
+import theme from '../config/theme';
 import moment from 'moment';
 
 export default class Precipitation extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: this.convertRainData(mockdata.area.rain),
+      data: this.convertRainData(this.props.rain),
     };
+    console.log(props.rain);
   }
 
   convertRainData(rain) {
@@ -38,8 +39,15 @@ export default class Precipitation extends Component {
   };
 
   render() {
+    if (!this.state.data.length) {
+      return null;
+    }
+
     return (
-      <React.Fragment>
+      <Grid
+        item xs={12} md={5} lg={5} xl={5}
+        style={{textAlign: 'center'}}
+      >
         <Typography variant="h6">
           降水量
         </Typography>
@@ -56,12 +64,12 @@ export default class Precipitation extends Component {
             />
             <Area
               type="monotone" dataKey="amount"
-              storoke="#8884d8"
-              fill="#8884d8"
+              storoke={theme.palette.primary.dark}
+              fill={theme.palette.primary.light}
             />
           </AreaChart>
         </ResponsiveContainer>
-      </React.Fragment>
+      </Grid>
     );
   }
 }

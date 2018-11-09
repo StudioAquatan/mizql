@@ -19,10 +19,20 @@ const theme = createMuiTheme({
     },
   },
   googleMap: {
-    height: '500px',
+    height: '600px',
   },
   friendList: {
     rowPerPage: 5,
+  },
+  dashboard: {
+    dangerMeter: {
+      colors: [
+        "#8fe516",
+        "#e5e516",
+        "#e58f16",
+        "#e53916", // HSB=(10,90,90)
+      ],
+    }
   },
 });
 

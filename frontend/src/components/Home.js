@@ -13,7 +13,6 @@ import {
 } from '@material-ui/core';
 import * as location from '../modules/location';
 import * as auth from '../modules/auth';
-import * as mockdata from "../config/mockdata";
 import * as api from "../modules/api";
 import ShelterMap from "./Map";
 import ShelterList from './ShelterList';
@@ -32,15 +31,15 @@ export default class Home extends Component {
       pickShelter: null,
       showDetail: false,
       isLogin: false,
-      isNearShelter: true,
+      showEvacuateConfirm: false,
       userInfo: null,
       area: null,
+      isDemo: localStorage.getItem('isDemo') === "true",
     };
   }
 
   componentDidMount() {
     location.getPosition().then((value) => {
-      console.log('get position');
       this.setState({
         location: {
           lat: value.lat,
@@ -48,25 +47,13 @@ export default class Home extends Component {
         },
       });
 
-      api.getShelters(value.lat, value.lng, 1000).then((shelters) => {
-        console.log(shelters);
-        console.log(value);
-        this.setState({shelters: shelters,});
-      }).catch((error) => {
-        console.error(error);
-      });
-
-      api.getArea(value.lat, value.lng).then((area) => {
-        console.log(area);
-        this.setState({area: area});
-      }).catch((error) => {
-        console.error(error);
-      });
+      this.updateShelters(value.lat, value.lng, this.state.isDemo);
+      this.updateArea(value.lat, value.lng, this.state.isDemo);
     }).catch((error) => {
       console.error(error);
     });
 
-    this.setState({isLogin: auth.isLogin()})
+    this.setState({isLogin: auth.isLogin()});
     if (auth.isLogin()) {
       api.getUserInfo().then((userInfo) => {
         console.log(userInfo);
@@ -75,6 +62,33 @@ export default class Home extends Component {
         console.error(error);
       });
     }
+  }
+
+  // 3km以内の避難所一覧を取得
+  updateShelters(lat, lng, isDemo) {
+    api.getShelters(lat, lng, 3000, isDemo).then((shelters) => {
+      let showConfirm = false;
+      if (shelters.length > 0 && shelters[0].distance <= process.env.REACT_APP_NEAR_THRESHOLD_METER) {
+        showConfirm = true;
+      }
+      this.setState({
+        shelters: shelters,
+        showEvacuateConfirm: showConfirm,
+      });
+    }).catch((error) => {
+      console.error(error);
+    });
+  }
+
+  // 周辺情報の取得
+  updateArea(lat, lng, isDemo) {
+    api.getArea(lat, lng, isDemo).then((area) => {
+      console.log('area');
+      console.log(area);
+      this.setState({area: area});
+    }).catch((error) => {
+      console.error(error);
+    });
   }
 
   pickShelter(shelter) {
@@ -98,12 +112,17 @@ export default class Home extends Component {
   }
 
   evacuate() {
-    this.setState({isNearShelter: false});
+    this.setState({showEvacuateConfirm: false});
     api.postEvacuate(75, true).then(() => {
       console.log('避難完了登録しました');
     }).catch((error) => {
       console.error(error);
     });
+  }
+
+  toggleDemoMode(isDemo) {
+    localStorage.setItem('isDemo', isDemo);
+    window.location.reload();
   }
 
   render() {
@@ -113,29 +132,35 @@ export default class Home extends Component {
           <Toolbar>
             <Typography variant='h6' color='inherit' component={Link} to="/" style={{flex: 1, textDecoration: 'none'}}>
               Mizukuru Map
+              {this.state.isDemo ? " - Demo" : null}
             </Typography>
+            {this.state.isDemo ?
+              <Button color="inherit" onClick={() => this.toggleDemoMode(false)}>Normal</Button>
+              :
+              <Button color="inherit" onClick={() => this.toggleDemoMode(true)}>Demo</Button>
+            }
             {this.state.isLogin ?
               <Button color="inherit" onClick={() => this.logout()}>Logout</Button>
               :
-              <Button color="inherit" component={Link} to="/login">Login</Button>}
+              <Button color="inherit" component={Link} to="/login">Login</Button>
+            }
           </Toolbar>
         </AppBar>
 
-        <Grid container justify='center'>
+        <Grid container justify='center' spacing={8} style={{padding: '10px'}}>
 
-          {this.state.shelters.length > 0 ?
+          {this.state.showEvacuateConfirm ?
             <Grid item xs={12}>
               <Paper
                 style={{
-                  margin: "5px 10px 0px 10px",
-                  padding: '5px',
+                  padding: "5px",
                   boxShadow: 'none',
                   border: `solid 2px ${theme.palette.secondary.light}`,
                   textAlign: 'center',
                 }}
               >
                 <Typography>
-                  あなたは{mockdata.shelters[0].name}の近くにいます．
+                  あなたは{this.state.shelters[0].name}の近くにいます．
                 </Typography>
                 <Button
                   size="small" variant="outlined" color="secondary" style={{margin: "0px 5px"}}
@@ -145,7 +170,7 @@ export default class Home extends Component {
                 </Button>
                 <Button
                   size="small" variant="outlined" style={{margin: "0px 5px"}}
-                  onClick={() => this.setState({isNearShelter: false})}
+                  onClick={() => this.setState({showEvacuateConfirm: false})}
                 >
                   キャンセル
                 </Button>
@@ -153,18 +178,20 @@ export default class Home extends Component {
             </Grid>
             : null}
 
-          <Grid item xs={12} style={{margin: 10}}>
-            <Dashboard
-              pickShelter={this.pickShelter.bind(this)}
-              canUseLocation={this.state.canUseGeolocation}
-              userInfo={this.state.userInfo}
-              area={this.props.area}
-            />
-          </Grid>
+          {this.state.area ?
+            <Grid item xs={12}>
+              <Dashboard
+                pickShelter={this.pickShelter.bind(this)}
+                canUseLocation={this.state.canUseGeolocation}
+                userInfo={this.state.userInfo}
+                area={this.state.area}
+              />
+            </Grid>
+            : null}
 
           {this.state.canUseGeolocation ?
             <Grid item xs={12} md={6}>
-              <Card style={{margin: 10, marginTop: 0, height: theme.googleMap.height}}>
+              <Card style={{height: theme.googleMap.height}}>
                 <CardContent style={{padding: 0, textAlign: 'center'}}>
                   {this.state.location ?
                     <ShelterMap
@@ -173,7 +200,7 @@ export default class Home extends Component {
                       pickShelter={this.pickShelter.bind(this)}
                     />
                     :
-                    <CircularProgress color="secondary" style={{marginTop: '180px'}}/>
+                    <CircularProgress color="secondary" style={{marginTop: '280px'}}/>
                   }
                 </CardContent>
               </Card>
@@ -183,11 +210,7 @@ export default class Home extends Component {
           }
 
           <Grid item xs={12} md={6}>
-            <Card style={{margin: 10, marginTop: 0}}>
-              <CardContent style={{padding: 0, textAlign: 'center'}}>
-                <ShelterList shelters={this.state.shelters} pickShelter={this.pickShelter.bind(this)}/>
-              </CardContent>
-            </Card>
+            <ShelterList shelters={this.state.shelters} pickShelter={this.pickShelter.bind(this)}/>
           </Grid>
         </Grid>
 
@@ -200,6 +223,7 @@ export default class Home extends Component {
             myPosition={this.state.location}
             shelter={this.state.pickShelter}
             pickShelter={this.pickShelter.bind(this)}
+            isDemo={this.state.isDemo}
           />
         </Drawer>
       </React.Fragment>

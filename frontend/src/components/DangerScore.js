@@ -1,39 +1,52 @@
 import React, {Component} from 'react';
 import ReactD3Gauge from 'react-d3-gauge';
-import {Typography} from '@material-ui/core';
+import {Typography, Grid} from '@material-ui/core';
 import theme from '../config/theme';
 
 export default class DangerScore extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      level: 0,
-    };
-  }
-
-  convertScoreToLevel(score) {
+  convertLevel = (score) => {
     if (!score) {
       return 0
     } else if (score > 4) {
       return 100
     }
     return score * 25 - 25 / 2;
-  }
+  };
+
+  getDisplayMessage = (score) => {
+    switch (score) {
+      case 0:
+        return "問題なし";
+      case 1:
+        return "問題ない";
+      case 2:
+        return "注意";
+      case 3:
+        return "危険";
+      case 4:
+        return "非常に危険";
+      case 5:
+        return "とてつもなく危険";
+      default:
+        return "";
+    }
+  };
 
   render() {
     return (
-      <React.Fragment>
-        <div style={{textAlign: 'center'}}>
-          <Typography variant="h6">
-            危険度
-          </Typography>
+      <Grid
+        item xs={12} md={4} lg={4} xl={4}
+        style={{textAlign: 'center'}}
+      >
+        <React.Fragment>
           <ReactD3Gauge
             needleColor={theme.palette.primary.dark}
-            colors={['green', 'yellow', 'orange', 'red']}
-            percent={this.convertScoreToLevel(this.props.score)}
+            colors={theme.dashboard.dangerMeter.colors}
+            percent={this.convertLevel(this.props.level)}
           />
-        </div>
-      </React.Fragment>
+          <Typography variant="h6">{this.getDisplayMessage(this.props.level)}</Typography>
+        </React.Fragment>
+      </Grid>
     );
   }
 }
