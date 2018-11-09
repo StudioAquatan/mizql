@@ -33,9 +33,6 @@ export default class DangerScore extends Component {
   };
 
   render() {
-    const level = this.convertLevel(this.props.level);
-    const msg = this.getDisplayMessage(this.props.level);
-
     return (
       <Grid
         item xs={12} md={4} lg={4} xl={4}
@@ -45,9 +42,9 @@ export default class DangerScore extends Component {
           <ReactD3Gauge
             needleColor={theme.palette.primary.dark}
             colors={theme.dashboard.dangerMeter.colors}
-            percent={level}
+            percent={this.convertLevel(this.props.level)}
           />
-          <Typography variant="h6">{msg}</Typography>
+          <Typography variant="h6">{this.getDisplayMessage(this.props.level)}</Typography>
         </React.Fragment>
       </Grid>
     );

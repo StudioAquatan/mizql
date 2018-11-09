@@ -26,7 +26,10 @@ export const login = (username, password) => sendRequest("POST", "/auth/jwt/crea
 // area
 export const getArea = (lat, lng, isDemo, date) => {
   if(isDemo){
-    return sendRequest("GET", "/demo-area/", {lat: lat, lon: lng, date: date});
+    if(date){
+      return sendRequest("GET", `/demo-area/?lat=${lat}&lon=${lng}&date=${date}`);
+    }
+    return sendRequest("GET", `/demo-area/?lat=${lat}&lon=${lng}`);
   }
   return sendRequest("GET", `/area/?lat=${lat}&lon=${lng}`);
 };

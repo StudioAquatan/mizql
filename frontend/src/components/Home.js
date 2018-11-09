@@ -34,7 +34,7 @@ export default class Home extends Component {
       showEvacuateConfirm: false,
       userInfo: null,
       area: null,
-      isDemo: false,
+      isDemo: localStorage.getItem('isDemo') === "true",
     };
   }
 
@@ -83,6 +83,7 @@ export default class Home extends Component {
   // 周辺情報の取得
   updateArea(lat, lng, isDemo) {
     api.getArea(lat, lng, isDemo).then((area) => {
+      console.log('area');
       console.log(area);
       this.setState({area: area});
     }).catch((error) => {
@@ -120,9 +121,8 @@ export default class Home extends Component {
   }
 
   toggleDemoMode(isDemo) {
-    this.setState({isDemo: isDemo});
-    this.updateShelters(this.state.location.lat, this.state.location.lng, isDemo);
-    this.updateArea(this.state.location.lat, this.state.location.lng, isDemo);
+    localStorage.setItem('isDemo', isDemo);
+    window.location.reload();
   }
 
   render() {

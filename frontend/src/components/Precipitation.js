@@ -14,6 +14,7 @@ export default class Precipitation extends Component {
     this.state = {
       data: this.convertRainData(this.props.rain),
     };
+    console.log(props.rain);
   }
 
   convertRainData(rain) {
@@ -38,7 +39,7 @@ export default class Precipitation extends Component {
   };
 
   render() {
-    if (!this.props.rain.length) {
+    if (!this.state.data.length) {
       return null;
     }
 

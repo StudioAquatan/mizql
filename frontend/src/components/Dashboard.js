@@ -8,7 +8,6 @@ import {
 } from '@material-ui/core';
 import theme from '../config/theme';
 import * as icons from '@material-ui/icons';
-// import * as mockdata from '../config/mockdata';
 import * as auth from '../modules/auth';
 import Precipitation from './Precipitation';
 import DangerScore from './DangerScore';
@@ -55,10 +54,10 @@ export default class Dashboard extends Component {
                 <List subheader={<ListSubheader component="div">発令中の警報・注意報</ListSubheader>}>
                   {this.props.area.alarms.map((alarm, key) => (
                     <ListItem key={key}>
-                      {alarm.type === 0 && <ListItemIcon>
+                      {alarm.type === 1 && <ListItemIcon>
                         <icons.Warning style={{color: "#D7DF01"}}/>
                       </ListItemIcon>}
-                      {alarm.type === 1 && <ListItemIcon>
+                      {alarm.type === 2 && <ListItemIcon>
                         <icons.Error style={{color: "#DF0101"}}/>
                       </ListItemIcon>}
                       <ListItemText primary={alarm.name}/>

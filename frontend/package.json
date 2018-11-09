@@ -9,6 +9,7 @@
     "moment": "^2.22.2",
     "react": "^16.6.0",
     "react-d3-gauge": "^0.0.1",
+    "react-d3-speedometer": "^0.4.1",
     "react-dom": "^16.6.0",
     "react-google-maps": "^9.4.5",
     "react-liquid-gauge": "^1.2.4",
