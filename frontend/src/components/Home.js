@@ -14,6 +14,7 @@ import {
 import * as location from '../modules/location';
 import * as auth from '../modules/auth';
 import * as mockdata from "../config/mockdata";
+import * as api from "../modules/api";
 import ShelterMap from "./Map";
 import ShelterList from './ShelterList';
 import Dashboard from './Dashboard';
@@ -27,7 +28,7 @@ export default class Home extends Component {
     this.state = {
       location: null,
       canUseGeolocation: location.canGetPosition(),
-      shelters: mockdata.shelters,
+      shelters: [],
       pickShelter: null,
       showDetail: false,
       isLogin: false,
@@ -37,11 +38,18 @@ export default class Home extends Component {
 
   componentDidMount() {
     location.getPosition().then((value) => {
-      this.setState({
-        location: {
-          lat: value.lat,
-          lng: value.lng,
-        },
+      api.getShelters(value.lat, value.lng, 1000).then((shelters) => {
+        console.log(shelters);
+        console.log(value);
+        this.setState({
+          location: {
+            lat: value.lat,
+            lng: value.lng,
+          },
+          shelters: shelters,
+        });
+      }).catch((error) => {
+        console.error(error);
       });
     }).catch((error) => {
       console.error(error);

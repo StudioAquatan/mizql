@@ -34,7 +34,6 @@ export default class Precipitation extends Component {
   }
 
   formatXAxis = (tickItem) => {
-    console.log(tickItem);
     return moment.unix(tickItem).format('HH:mm');
   };
 
