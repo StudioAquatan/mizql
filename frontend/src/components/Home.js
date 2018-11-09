@@ -170,7 +170,7 @@ export default class Home extends Component {
           </Grid>
 
           {this.state.canUseGeolocation ?
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={5}>
               <Card style={{height: theme.googleMap.height}}>
                 <CardContent style={{padding: 0, textAlign: 'center'}}>
                   {this.state.location ?
@@ -189,7 +189,7 @@ export default class Home extends Component {
             <Typography>GPSを使用できません</Typography>
           }
 
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={7}>
             <Card>
               <CardContent style={{padding: 0, textAlign: 'center'}}>
                 <ShelterList shelters={this.state.shelters} pickShelter={this.pickShelter.bind(this)}/>

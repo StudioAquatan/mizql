@@ -1,13 +1,21 @@
 import React, {Component} from 'react';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import {
+  Paper,
+  Table, TableBody, TableCell, TableHead, TableRow, TablePagination, TableFooter
+} from '@material-ui/core';
 
 
 export default class ShelterList extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      page: 0,
+    };
+  }
+
+  handleChangePage(e, p) {
+    this.setState({page: p});
+  }
 
   render(){
     if(!this.props.shelters){
@@ -28,7 +36,7 @@ export default class ShelterList extends Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {this.props.shelters.map((shelter, key) => (
+            {this.props.shelters.slice(this.state.page * 10, this.state.page * 10 + 10).map((shelter, key) => (
               <TableRow
                 key={key}
                 hover
@@ -40,6 +48,17 @@ export default class ShelterList extends Component {
               </TableRow>
             ))}
           </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                count={this.props.shelters.length}
+                onChangePage={this.handleChangePage.bind(this)}
+                page={this.state.page}
+                rowsPerPage={10}
+                rowsPerPageOptions={[10]}
+              />
+            </TableRow>
+          </TableFooter>
         </Table>
       </Paper>
     )
