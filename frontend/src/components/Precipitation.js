@@ -4,7 +4,7 @@ import {
   ResponsiveContainer,
   XAxis, YAxis
 } from 'recharts';
-import {Grid, Typography} from '@material-ui/core';
+import {Grid, Typography, Paper} from '@material-ui/core';
 import theme from '../config/theme';
 import moment from 'moment';
 
@@ -46,25 +46,27 @@ export default class Precipitation extends Component {
     return (
       <Grid
         item xs={12} md={5} lg={5} xl={5}
-        style={{textAlign: 'center', paddingRight: '50px'}}
+        style={{textAlign: 'center'}}
       >
-        <ResponsiveContainer width='100%' height={200}>
-          <AreaChart data={this.state.data}>
-            <XAxis
-              dataKey="time"
-              tickFormatter={this.formatXAxis}
-              tick={{fontSize: 11}}
-            />
-            <YAxis
-              tick={{fontSize: 11}}
-            />
-            <Area
-              type="monotone" dataKey="amount"
-              storoke='#34314c'
-              fill='#47b8e0'
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+        <Paper style={{paddingRight: '50px', boxShadow: 'none'}}>
+          <ResponsiveContainer width='100%' height={200} style={{paddingRight: '50px'}}>
+            <AreaChart data={this.state.data}>
+              <XAxis
+                dataKey="time"
+                tickFormatter={this.formatXAxis}
+                tick={{fontSize: 11}}
+              />
+              <YAxis
+                tick={{fontSize: 11}}
+              />
+              <Area
+                type="monotone" dataKey="amount"
+                storoke='#34314c'
+                fill='#47b8e0'
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </Paper>
         <Typography variant="h6">
           降水量
         </Typography>

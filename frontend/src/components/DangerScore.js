@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {Grid} from '@material-ui/core';
 import theme from '../config/theme';
-import ReactSpeedometer from 'react-d3-speedometer';
 import LiquidFillGauge from 'react-liquid-gauge';
 import {interpolateRgb} from 'd3-interpolate';
 import { color } from 'd3-color';
