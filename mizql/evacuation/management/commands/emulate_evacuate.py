@@ -40,7 +40,7 @@ class Command(BaseCommand):
                 EvacuationHistory(shelter=shelter, count=current, created_at=date).save()
                 count += 1
         for user in tqdm(all_users, 'Users'):
-            date = datetime.strptime(options['date'] + '0900', '%Y/%m/%d %H:%M:%S%z') + timedelta(minutes=10 * 10)
+            date = datetime.strptime(options['date'] + '+0900', '%Y/%m/%d %H:%M:%S%z') + timedelta(minutes=10 * 10)
             is_evacuated = True if 0.8 > random.random() else False
             shelter = random.choice(all_shelters)
             PersonalEvacuationHistory.objects.create(
