@@ -42,7 +42,7 @@ export default class ShelterDetail extends Component {
   };
 
   componentDidMount() {
-    api.getShelterHistory(this.props.shelter.pk).then((history) => {
+    api.getShelterHistory(this.props.shelter.pk, this.props.isDemo).then((history) => {
       this.setState({history: history});
     }).catch((error) => {
       console.error(error);

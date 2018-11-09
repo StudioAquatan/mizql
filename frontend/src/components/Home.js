@@ -13,7 +13,6 @@ import {
 } from '@material-ui/core';
 import * as location from '../modules/location';
 import * as auth from '../modules/auth';
-import * as mockdata from "../config/mockdata";
 import * as api from "../modules/api";
 import ShelterMap from "./Map";
 import ShelterList from './ShelterList';
@@ -48,28 +47,8 @@ export default class Home extends Component {
         },
       });
 
-      // 3km以内の避難所一覧を取得
-      api.getShelters(value.lat, value.lng, 3000).then((shelters) => {
-        let showConfirm = false;
-        if(shelters.length > 0 && shelters[0].distance <= process.env.REACT_APP_NEAR_THRESHOLD_METER) {
-          showConfirm = true;
-          console.log("near!!!!!!!!!!!!!!!!");
-        }
-        this.setState({
-          shelters: shelters,
-          showEvacuateConfirm: showConfirm,
-        });
-      }).catch((error) => {
-        console.error(error);
-      });
-
-      // 周辺情報の取得
-      api.getArea(value.lat, value.lng).then((area) => {
-        console.log(area);
-        this.setState({area: area});
-      }).catch((error) => {
-        console.error(error);
-      });
+      this.updateShelters(value.lat, value.lng, this.state.isDemo);
+      this.updateArea(value.lat, value.lng, this.state.isDemo);
     }).catch((error) => {
       console.error(error);
     });
@@ -83,6 +62,32 @@ export default class Home extends Component {
         console.error(error);
       });
     }
+  }
+
+  // 3km以内の避難所一覧を取得
+  updateShelters(lat, lng, isDemo) {
+    api.getShelters(lat, lng, 3000, isDemo).then((shelters) => {
+      let showConfirm = false;
+      if (shelters.length > 0 && shelters[0].distance <= process.env.REACT_APP_NEAR_THRESHOLD_METER) {
+        showConfirm = true;
+      }
+      this.setState({
+        shelters: shelters,
+        showEvacuateConfirm: showConfirm,
+      });
+    }).catch((error) => {
+      console.error(error);
+    });
+  }
+
+  // 周辺情報の取得
+  updateArea(lat, lng, isDemo) {
+    api.getArea(lat, lng, isDemo).then((area) => {
+      console.log(area);
+      this.setState({area: area});
+    }).catch((error) => {
+      console.error(error);
+    });
   }
 
   pickShelter(shelter) {
@@ -114,9 +119,10 @@ export default class Home extends Component {
     });
   }
 
-  toggleDemoMode() {
-    console.log("toggle");
-    this.setState({isDemo: !this.state.isDemo});
+  toggleDemoMode(isDemo) {
+    this.setState({isDemo: isDemo});
+    this.updateShelters(this.state.location.lat, this.state.location.lng, isDemo);
+    this.updateArea(this.state.location.lat, this.state.location.lng, isDemo);
   }
 
   render() {
@@ -129,9 +135,9 @@ export default class Home extends Component {
               {this.state.isDemo ? " - Demo" : null}
             </Typography>
             {this.state.isDemo ?
-              <Button color="inherit" onClick={() => this.toggleDemoMode()}>Normal</Button>
+              <Button color="inherit" onClick={() => this.toggleDemoMode(false)}>Normal</Button>
               :
-              <Button color="inherit" onClick={() => this.toggleDemoMode()}>Demo</Button>
+              <Button color="inherit" onClick={() => this.toggleDemoMode(true)}>Demo</Button>
             }
             {this.state.isLogin ?
               <Button color="inherit" onClick={() => this.logout()}>Logout</Button>
@@ -188,13 +194,13 @@ export default class Home extends Component {
               <Card style={{height: theme.googleMap.height}}>
                 <CardContent style={{padding: 0, textAlign: 'center'}}>
                   {/*{this.state.location ?*/}
-                    {/*<ShelterMap*/}
-                      {/*myPosition={this.state.location}*/}
-                      {/*shelters={this.state.shelters}*/}
-                      {/*pickShelter={this.pickShelter.bind(this)}*/}
-                    {/*/>*/}
-                    {/*:*/}
-                    <CircularProgress color="secondary" style={{marginTop: '180px'}}/>
+                  {/*<ShelterMap*/}
+                  {/*myPosition={this.state.location}*/}
+                  {/*shelters={this.state.shelters}*/}
+                  {/*pickShelter={this.pickShelter.bind(this)}*/}
+                  {/*/>*/}
+                  {/*:*/}
+                  <CircularProgress color="secondary" style={{marginTop: '180px'}}/>
                   {/*}*/}
                 </CardContent>
               </Card>
@@ -221,6 +227,7 @@ export default class Home extends Component {
             myPosition={this.state.location}
             shelter={this.state.pickShelter}
             pickShelter={this.pickShelter.bind(this)}
+            isDemo={this.state.isDemo}
           />
         </Drawer>
       </React.Fragment>
