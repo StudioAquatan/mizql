@@ -2,7 +2,8 @@ SHELL   := /bin/bash
 
 NAME    := mizql
 
-SRCS    := $(shell find ./src -type f \( -name '*.css' -o -name '*.py' -o -name '*.html' -o -name '*.js' \) -print)
+SRCS    := $(shell find ./mizql -type f \( -name '*.css' -o -name '*.py' -o -name '*.html' -o -name '*.js' \) -print)
+FRONT_SRCS := $(shell find ./frontend -type f \( -name '*.css' -o -name '*.html' -o -name '*.js' \) -print)
 DOCKERFILE := Dockerfile
 DB_USER := develop
 DB_PASSWORD := password
@@ -29,13 +30,17 @@ deps:
 		echo "'$(DB_IMAGE):$(DB_IMAGE_VERSION)' has already been pulled."; \
 	fi
 
+frontimage: $(FRONT_SRCS) frontend/$(DOCKERFILE)
+	cd frontend && docker build . -t studioaquatan/$(NAME)-front:latest
+
 image: $(SRCS) $(DOCKERFILE)
 	$(eval VERSION := $(shell git describe --tags || echo "v0.0.0"))
 	$(eval REVISION:= $(shell git rev-parse --short HEAD || echo "None"))
-	docker build . -t studioaquatan/plannap-api:latest
+	docker build . -t studioaquatan/$(NAME):latest
 
 pull:
-	docker pull studioaquatan/plannap-api:latest
+	docker pull studioaquatan/$(NAME):latest
+	docker pull studioaquatan/$(NAME)-front:latest
 
 rundb:
 	$(eval RUNNING := $(shell docker ps -q -f name=$(DEV_DB_CONTAINER)))
@@ -54,7 +59,7 @@ rundb:
 			-e MYSQL_USER=$(DB_USER) \
 			-e MYSQL_PASSWORD=$(DB_PASSWORD) \
 			-e MYSQL_DATABASE=$(DB_NAME) \
-			-p $(DB_PORT):$(DB_PORT) \
+			-p $(DB_PORT):3306 \
 			$(DB_IMAGE):$(DB_IMAGE_VERSION) > /dev/null; \
 	fi
 
@@ -87,4 +92,7 @@ prod-start:
 prod-manage:
 	docker-compose -f docker-compose.prod.yml exec webapp pipenv run python manage.py $(ARGS)
 
-.PHONY: deps image rundb stopdb cleandb qa-start qa-stop qa-manage qa-clean ;
+prod-stop:
+	docker-compose -f docker-compose.prod.yml stop
+
+.PHONY: deps image rundb stopdb cleandb qa-start qa-stop qa-manage qa-clean $(FRONT_SRCS) ;

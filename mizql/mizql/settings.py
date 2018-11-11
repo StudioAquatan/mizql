@@ -56,6 +56,10 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'djoser',
     'django_filters',
+    'accounts',
+    'evacuation',
+    'disaster',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -66,9 +70,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'mizql.urls'
+AUTH_USER_MODEL = 'accounts.User'
+
 
 TEMPLATES = [
     {
@@ -142,12 +149,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/api/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 DJOSER = {
     'SEND_ACTIVATION_EMAIL': False,
     'SEND_CONFIRMATION_EMAIL': False,
+}
+
+SWAGGER_SETTINGS = {
+    'LOGIN_URL': 'accounts:login',
+    'LOGOUT_URL': 'accounts:logout',
 }
 
 REST_FRAMEWORK = {
@@ -158,9 +170,16 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
-    'DATETIME_FORMAT': "%Y/%m/%d"
 }
 
 JWT_AUTH = {
     'JWT_VERIFY_EXPIRATION': False
 }
+
+if DEBUG:
+    CORS_ORIGIN_ALLOW_ALL = True
+else:
+    FORCE_SCRIPT_NAME = '/api'
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+YOLP_APP_ID = os.getenv('YOLP_APP_ID')

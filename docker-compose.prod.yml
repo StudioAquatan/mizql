@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+  webapp:
+    container_name: mizql-app-prod
+    image: studioaquatan/mizql:latest
+    env_file:
+      - env_files/app.env
+    expose:
+      - 8000
+    depends_on:
+      - db
+    networks:
+      default:
+        aliases:
+          - mizql-app
+  db:
+    image: studioaquatan/mysql-utf8mb4:latest
+    container_name: mizql-db-prod
+    env_file:
+      - env_files/db.env
+    volumes:
+      - ./env_files/data:/var/lib/mysql:rw
+    networks:
+      default:
+        aliases:
+          - mizql-db
+  nginx:
+    image: studioaquatan/mizql-front:latest
+    container_name: mizql-nginx-prod
+    env_file:
+      - env_files/static.env
+    volumes:
+      - ./env_files/conf_prod:/etc/nginx/conf.d
+      - ./mizql/static:/usr/share/www/html/static
+    depends_on:
+      - webapp
+    networks:
+      - default
+      - shared
+
+networks:
+  shared:
+    external:
+      name: internal_shared

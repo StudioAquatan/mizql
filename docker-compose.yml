@@ -32,8 +32,8 @@ services:
       - env_files/static.env
     volumes:
       - ./env_files/conf_qa:/etc/nginx/conf.d
-      - ./src/static:/usr/share/www/html/static
-      - ./src/media:/usr/share/www/html/media
+      - ./mizql/static:/usr/share/www/html/static
+      - ./frontend/build:/usr/share/www/html/front
     depends_on:
       - webapp
     ports:
